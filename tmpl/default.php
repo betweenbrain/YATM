@@ -20,7 +20,7 @@ foreach ($results['results'] as $result) {
 
         $result = modYatmHelper::linkEntities($result);
         ?>
-	<div style="border: 1px solid #999; margin: 25px;">
+	<div>
 		<a href="https://twitter.com/<?php echo $result['from_user'] ?>">
 			<img src="<?php echo $result['profile_image_url'] ?>" />
 		</a>
