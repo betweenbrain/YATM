@@ -1,11 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-    <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
-</head>
-<body>
-
 <?php
 
     /**
@@ -15,8 +7,17 @@
      * Copyright  Copyright (C) 2012 betweenbrain llc.
      * License    GNU GPL v3 or later
      */
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+</head>
+<body>
+<?php
 
-    function searchTwitter($url = null, $array = true) {
+    function searchTwitter($url = NULL, $array = TRUE) {
         $curl = curl_init();
 
         curl_setopt_array($curl, Array(
@@ -24,9 +25,9 @@
             CURLOPT_URL            => $url,
             CURLOPT_TIMEOUT        => 300,
             CURLOPT_CONNECTTIMEOUT => 60,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_SSL_VERIFYHOST => false,
-            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_RETURNTRANSFER => TRUE,
+            CURLOPT_SSL_VERIFYHOST => FALSE,
+            CURLOPT_SSL_VERIFYPEER => FALSE,
             CURLOPT_ENCODING       => 'UTF-8'
         ));
 
@@ -36,6 +37,7 @@
 
         return $results;
     }
+
 
     $url = 'http://search.twitter.com/search.json?q=';
     $url .= '%23GuggUBSMAP%20';
@@ -52,73 +54,65 @@
 
     foreach ($results['results'] as $result) {
 
+        /*
         echo '<pre>';
         echo print_r($result['text']);
         echo '</pre>';
-
+        */
 
         foreach ($result['entities']['hashtags'] as $hashtag) {
-
-            $replacement    = '<a href="http://search.twitter.com/search?q=' . $hashtag['text'] . '">#' . $hashtag['text'] . '</a>';
-            $result['text'] = str_replace('#' . $hashtag['text'], $replacement, $result['text']);
+            $url            = 'http://search.twitter.com/search?q=';
+            $obj            = '#' . $hashtag['text'];
+            $replacement    = '<a href="' . $url . $obj . '" >' . $obj . '</a>';
+            $result['text'] = preg_replace("/$obj/i", $replacement, $result['text']);
 
             /*
             echo '<pre>';
-            echo print_r($hashtag);
+            echo 'Hashtag: ' . $hashtag['text'];
             echo '</pre>';
-
-            $start  = $hashtag['indices'][0];
-            $length = $hashtag['indices'][1] - $start;
-            $result['text'] = substr_replace($result['text'], $replacement, $start, $length);
             */
+
         }
 
         foreach ($result['entities']['user_mentions'] as $mention) {
-            $replacement    = '<a href="http://twitter.com/' . $mention['screen_name'] . '">' . '@' . $mention['screen_name'] . '</a>';
-            $result['text'] = str_replace('@' . $mention['screen_name'], $replacement, $result['text']);
+            $url            = 'http://twitter.com/';
+            $obj            = '@' . $mention['screen_name'];
+            $replacement    = '<a href="' . $url . $obj . '" >' . $obj . '</a>';
+            $result['text'] = preg_replace("/$obj/i", $replacement, $result['text']);
 
             /*
             echo '<pre>';
-            echo print_r($mention);
+            echo 'Mention: ' . $mention['screen_name'];
             echo '</pre>';
-
-            $start       = $mention['indices'][0];
-            $length      = $mention['indices'][1] - $start;
-            $result['text'] = substr_replace($result['text'], $replacement, $start, $length);
             */
+
         }
 
         foreach ($result['entities']['urls'] as $urls) {
-
-            $replacement    = '<a href="' . $urls['url'] . '">' . $urls['url'] . '</a>';
-            $result['text'] = str_replace($urls['url'], $replacement, $result['text']);
+            $url            = NULL;
+            $obj            = str_replace(array('/'), array('\/'), $urls['url']);
+            $replacement    = '<a href="' . $url . $obj . '" >' . $obj . '</a>';
+            $result['text'] = preg_replace("/$obj/i", $replacement, $result['text']);
 
             /*
             echo '<pre>';
-            echo print_r($mention);
+            echo 'Urls: ' . $urls['url'];
             echo '</pre>';
-
-            $start          = $urls['indices'][0];
-            $length         = $urls['indices'][1] - $start;
-            $result['text'] = substr_replace($result['text'], $replacement, $start, $length);
             */
-        }
 
-        foreach ($result as $key => $value) {
-            $tweet[$key] = $value;
         }
 
         ?>
 
     <div style="border: 1px solid #999; margin: 25px;">
-        <img src="<?php echo $tweet['profile_image_url'] ?>" />
-        <a href="https://twitter.com/<?php echo $tweet['from_user'] ?>"><?php echo $tweet['from_user_name'] ?></a>
-        <p>@<?php echo $tweet['from_user'] ?></p>
-        <p><?php echo $tweet['text'] ?></p>
-        <p><?php echo  substr($tweet['created_at'], 4, 7); ?></p>
-        <a href="https://twitter.com/intent/tweet?in_reply_to=<?php echo $tweet['id'] ?>">Reply</a><br />
-        <a href="https://twitter.com/intent/retweet?tweet_id=<?php echo $tweet['id'] ?>&via=betweenbrain">Retweet</a><br />
-        <a href="https://twitter.com/intent/favorite?tweet_id=<?php echo $tweet['id'] ?>">Favorite</a><br />
+        <img src="<?php echo $result['profile_image_url'] ?>" />
+        <a href="https://twitter.com/<?php echo $result['from_user'] ?>"><?php echo $result['from_user_name'] ?></a>
+        <p>@<?php echo $result['from_user'] ?></p>
+        <p><?php echo $result['text'] ?></p>
+        <p><?php echo  substr($result['created_at'], 4, 7); ?></p>
+        <a href="https://twitter.com/intent/tweet?in_reply_to=<?php echo $result['id'] ?>">Reply</a><br />
+        <a href="https://twitter.com/intent/retweet?tweet_id=<?php echo $result['id'] ?>&via=betweenbrain">Retweet</a><br />
+        <a href="https://twitter.com/intent/favorite?tweet_id=<?php echo $result['id'] ?>">Favorite</a><br />
     </div>
 
         <?php
