@@ -72,17 +72,17 @@
             // Link hashtags
             foreach ($result['entities']['hashtags'] as $hashtag) {
                 $url            = 'http://search.twitter.com/search?q=';
-                $obj            = '#' . $hashtag['text'];
-                $replacement    = '<a href="' . $url . $obj . '" >' . $obj . '</a>';
-                $result['text'] = preg_replace("/$obj/i", $replacement, $result['text']);
+                $obj            = $hashtag['text'];
+                $replacement    = '<a href="' . $url . $obj . '" >#' . $obj . '</a>';
+                $result['text'] = preg_replace("/#$obj/i", $replacement, $result['text']);
             }
 
             // Link mentions
             foreach ($result['entities']['user_mentions'] as $mention) {
                 $url            = 'http://twitter.com/';
-                $obj            = '@' . $mention['screen_name'];
-                $replacement    = '<a href="' . $url . $obj . '" >' . $obj . '</a>';
-                $result['text'] = preg_replace("/$obj/i", $replacement, $result['text']);
+                $obj            = $mention['screen_name'];
+                $replacement    = '<a href="' . $url . $obj . '" >@' . $obj . '</a>';
+                $result['text'] = preg_replace("/@$obj/i", $replacement, $result['text']);
             }
 
             // Link URLs
