@@ -25,6 +25,7 @@ class modYatmHelper {
         ));
 
         $json = curl_exec($curl);
+
         // true for associative array
         $results = json_decode($json, $array);
 
@@ -64,22 +65,27 @@ class modYatmHelper {
         // Clear the bad flag
         $bannedflag = NULL;
 
+        // retrieve the parameter
         $bannedwords = htmlspecialchars($params->get('bannedwords'));
-        $bannedusers = htmlspecialchars($params->get('bannedusers'));
-
-        // Check Tweet text for bad words
-        $bannedwords = array('TopTag', 'Fundraising');
-        foreach ($bannedwords as $bannedword) {
-            if (preg_match("/\b$bannedword\b/i", $result['text'])) {
-                $bannedflag = TRUE;
+        // check for any input
+        if ($bannedwords) {
+            // remove spaces around commas, make it an array
+            $bannedwords = explode(',', (str_replace(array(', ', ' , ', ' ,'), ',', $bannedwords)));
+            // Check Tweet text for bad words
+            foreach ($bannedwords as $bannedword) {
+                if (preg_match("/\b$bannedword\b/i", $result['text'])) {
+                    $bannedflag = TRUE;
+                }
             }
         }
 
-        // Check Tweetee for being banned or not
-        $bannedusers = array('betweenbrain', 'suportejoomlabr');
-        foreach ($bannedusers as $banneduser) {
-            if (preg_match("/\b$banneduser\b/i", $result['from_user'])) {
-                $bannedflag = TRUE;
+        $bannedusers = htmlspecialchars($params->get('bannedusers'));
+        if ($bannedusers) {
+            $bannedusers = explode(',', (str_replace(array(', ', ' , ', ' ,'), ',', $bannedusers)));
+            foreach ($bannedusers as $banneduser) {
+                if (preg_match("/\b$banneduser\b/i", $result['from_user'])) {
+                    $bannedflag = TRUE;
+                }
             }
         }
 
