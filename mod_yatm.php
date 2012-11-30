@@ -10,12 +10,17 @@
 
 require_once(dirname(__FILE__) . DS . 'helper.php');
 
-// get and define params here
+// get parameters from the module's configuration
+$term = htmlspecialchars($params->get('term'));
+$rpp  = htmlspecialchars($params->get('rpp'));
+$type = $params->get('type');
+
+// build the search URL
 $url = 'http://search.twitter.com/search.json?q=';
-$url .= '%23joomla';
-$url .= '&result_type=mixed';
+$url .= '%23' . $term;
+$url .= '&result_type=' . $type;
 $url .= '&include_entities=1';
-$url .= '&rpp=100';
+$url .= '&rpp=' . $rpp;
 
 // get the items to display from the helper
 $results = modYatmHelper::searchTwitter($url);

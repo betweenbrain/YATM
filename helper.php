@@ -60,15 +60,18 @@ class modYatmHelper {
         return $result;
     }
 
-    function filterTweet($result) {
+    function filterTweet($result, $params) {
         // Clear the bad flag
-        $badflag = NULL;
+        $bannedflag = NULL;
+
+        $bannedwords = htmlspecialchars($params->get('bannedwords'));
+        $bannedusers = htmlspecialchars($params->get('bannedusers'));
 
         // Check Tweet text for bad words
-        $badwords = array('TopTag', 'Fundraising');
-        foreach ($badwords as $badword) {
-            if (preg_match("/\b$badword\b/i", $result['text'])) {
-                $badflag = TRUE;
+        $bannedwords = array('TopTag', 'Fundraising');
+        foreach ($bannedwords as $bannedword) {
+            if (preg_match("/\b$bannedword\b/i", $result['text'])) {
+                $bannedflag = TRUE;
             }
         }
 
@@ -76,11 +79,11 @@ class modYatmHelper {
         $bannedusers = array('betweenbrain', 'suportejoomlabr');
         foreach ($bannedusers as $banneduser) {
             if (preg_match("/\b$banneduser\b/i", $result['from_user'])) {
-                $badflag = TRUE;
+                $bannedflag = TRUE;
             }
         }
 
-        return $badflag;
+        return $bannedflag;
     }
 
 }
