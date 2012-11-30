@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install type="module" version="2.5" method="upgrade">
+	<name>YATM</name>
+	<creationDate>November 29, 2012</creationDate>
+	<author>Matt Thomas</author>
+	<authorUrl>http://betweenbrain.com</authorUrl>
+	<copyright>Copyright (C) 2009 - 2012 Matt Thomas. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<version>0.0.1</version>
+	<description>Yet Another Twitter Module!</description>
+	<files>
+		<filename>mod_yatm.xml</filename>
+		<filename module="mod_yatm">mod_yatm.php</filename>
+		<filename>index.html</filename>
+		<filename>helper.php</filename>
+		<filename>tmpl/default.php</filename>
+		<filename>tmpl/index.html</filename>
+	</files>
+	<params>
+	</params>
+</install>
