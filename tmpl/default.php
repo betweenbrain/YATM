@@ -12,6 +12,8 @@
 <div class="yatm<?php echo $params->get('moduleclass_sfx'); ?>">
 	<ul>
         <?php foreach ($results['results'] as $result) {
+        // Link Tweet entities
+        $result = modYatmHelper::linkEntities($result);
         if (!$badflag) {
             ?>
 			<li>
@@ -41,8 +43,8 @@
 				</a>
 			</li>
             <?php
-            }
         }
+    }
         ?>
 	</ul>
 </div>

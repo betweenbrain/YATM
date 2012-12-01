@@ -20,7 +20,5 @@ modYatmHelper::loadCss($params, $doc);
 $results = modYatmHelper::searchTwitter($params);
 // Filter unwanted Tweets
 $badflag = modYatmHelper::filterTweet($result, $params);
-// Link Tweet entities
-$result = modYatmHelper::linkEntities($result);
 // We need a body for the brains
 require(JModuleHelper::getLayoutPath('mod_yatm'));
