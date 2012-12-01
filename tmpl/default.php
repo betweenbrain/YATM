@@ -12,13 +12,7 @@
 <div class="yatm<?php echo $params->get('moduleclass_sfx'); ?>">
 	<ul>
         <?php foreach ($results['results'] as $result) {
-
-        $badflag = modYatmHelper::filterTweet($result, $params);
-
         if (!$badflag) {
-
-            $result = modYatmHelper::linkEntities($result);
-
             ?>
 			<li>
 				<a class="from-user" href="https://twitter.com/<?php echo $result['from_user'] ?>">
@@ -47,8 +41,8 @@
 				</a>
 			</li>
             <?php
+            }
         }
-    }
         ?>
 	</ul>
 </div>

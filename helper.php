@@ -10,7 +10,20 @@
 
 class modYatmHelper {
 
-    function searchTwitter($url = NULL, $array = TRUE) {
+    function searchTwitter($params) {
+
+        // get parameters from the module's configuration
+        $term = htmlspecialchars($params->get('term'));
+        $type = $params->get('type');
+        $rpp  = htmlspecialchars($params->get('rpp'));
+
+        // build the search URL
+        $url = 'http://search.twitter.com/search.json?q=';
+        $url .= '%23' . $term;
+        $url .= '&result_type=' . $type;
+        $url .= '&include_entities=1';
+        $url .= '&rpp=' . $rpp;
+
         $curl = curl_init();
 
         curl_setopt_array($curl, Array(
@@ -26,8 +39,7 @@ class modYatmHelper {
 
         $json = curl_exec($curl);
 
-        // true for associative array
-        $results = json_decode($json, $array);
+        $results = json_decode($json, TRUE);
 
         return $results;
     }
@@ -90,6 +102,45 @@ class modYatmHelper {
         }
 
         return $bannedflag;
+    }
+
+    function loadJs($params, $doc) {
+        if ($params->get('loadjs')) {
+            $doc->addScript('http://platform.twitter.com/widgets.js');
+            if ($params->get('loadjquery')) {
+                $doc->addScript('http://code.jquery.com/jquery.min.js');
+            }
+            $doc->addScript($this->baseurl . 'modules/mod_yatm/tmpl/js/jquery.carousel.min.js');
+            $js = '(function ($) {
+                $().ready(function () {
+                    $("div.yatm").carousel({
+                        dispItems        :' . htmlspecialchars($params->get('dispItems')) . ',
+                        loop             :' . ($params->get('loop') ? 'true' : 'false') . ',
+                        autoSlide        :' . ($params->get('autoSlide') ? 'true' : 'false') . ',
+                        autoSlideInterval:' . htmlspecialchars($params->get('autoSlideInterval')) . '
+                    });
+                });
+            })(jQuery)';
+            // Nicefy JS
+            $js = preg_replace(array('/\s{2,}+/', '/\t/', '/\n/'), '', $js);
+            $doc->addScriptDeclaration($js);
+        }
+    }
+
+    function loadCss($params, $doc) {
+        if ($params->get('loadcss')) {
+            $doc->addStyleSheet($this->baseurl . 'modules/mod_yatm/tmpl/css/yatm.css');
+            $css = '.yatm {
+        	    width   : ' . htmlspecialchars($params->get('containerwidth')) . ';
+        	    padding : 0 ' . htmlspecialchars($params->get('buttondistance')) . ';
+            }
+            .yatm li {
+        	    width           : ' . htmlspecialchars($params->get('tweetwidth')) . ';
+            }';
+            // Nicefy CSS
+            $css = preg_replace(array('/\s{2,}+/', '/\t/', '/\n/'), '', $css);
+            $doc->addStyleDeclaration($css);
+        }
     }
 
 }
