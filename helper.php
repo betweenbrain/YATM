@@ -39,7 +39,7 @@ class modYatmHelper {
 
         $json = curl_exec($curl);
 
-        $results = json_decode($json, TRUE);
+        $results = json_decode($json);
 
         return $results;
     }
@@ -47,27 +47,27 @@ class modYatmHelper {
     function linkEntities($result) {
 
         // Link hashtags
-        foreach ($result['entities']['hashtags'] as $hashtag) {
-            $url            = 'http://search.twitter.com/search?q=';
-            $obj            = $hashtag['text'];
-            $replacement    = '<a href="' . $url . $obj . '" >#' . $obj . '</a>';
-            $result['text'] = preg_replace("/#$obj/i", $replacement, $result['text']);
+        foreach ($result->entities->hashtags as $hashtag) {
+            $url          = 'http://search.twitter.com/search?q=';
+            $obj          = $hashtag->text;
+            $replacement  = '<a href="' . $url . $obj . '" >#' . $obj . '</a>';
+            $result->text = preg_replace("/#$obj/i", $replacement, $result->text);
         }
 
         // Link mentions
-        foreach ($result['entities']['user_mentions'] as $mention) {
-            $url            = 'http://twitter.com/';
-            $obj            = $mention['screen_name'];
-            $replacement    = '<a href="' . $url . $obj . '" >@' . $obj . '</a>';
-            $result['text'] = preg_replace("/@$obj/i", $replacement, $result['text']);
+        foreach ($result->entities->user_mentions as $mention) {
+            $url          = 'http://twitter.com/';
+            $obj          = $mention->screen_name;
+            $replacement  = '<a href="' . $url . $obj . '" >@' . $obj . '</a>';
+            $result->text = preg_replace("/@$obj/i", $replacement, $result->text);
         }
 
         // Link URLs
-        foreach ($result['entities']['urls'] as $urls) {
-            $url            = NULL;
-            $obj            = str_replace(array('/'), array('\/'), $urls['url']);
-            $replacement    = '<a href="' . $url . $obj . '" >' . $urls['url'] . '</a>';
-            $result['text'] = preg_replace("/$obj/i", $replacement, $result['text']);
+        foreach ($result->entities->urls as $urls) {
+            $url          = NULL;
+            $obj          = str_replace(array('/'), array('\/'), $urls->url);
+            $replacement  = '<a href="' . $url . $obj . '" >' . $urls->url . '</a>';
+            $result->text = preg_replace("/$obj/i", $replacement, $result->text);
         }
 
         return $result;
@@ -85,7 +85,7 @@ class modYatmHelper {
             $bannedwords = explode(',', (str_replace(array(', ', ' , ', ' ,'), ',', $bannedwords)));
             // Check Tweet text for bad words
             foreach ($bannedwords as $bannedword) {
-                if (preg_match("/\b$bannedword\b/i", $result['text'])) {
+                if (preg_match("/\b$bannedword\b/i", $result->text)) {
                     $bannedflag = TRUE;
                 }
             }
@@ -95,7 +95,7 @@ class modYatmHelper {
         if ($bannedusers) {
             $bannedusers = explode(',', (str_replace(array(', ', ' , ', ' ,'), ',', $bannedusers)));
             foreach ($bannedusers as $banneduser) {
-                if (preg_match("/\b$banneduser\b/i", $result['from_user'])) {
+                if (preg_match("/\b$banneduser\b/i", $result->from_user)) {
                     $bannedflag = TRUE;
                 }
             }
@@ -110,7 +110,7 @@ class modYatmHelper {
             if ($params->get('loadjquery')) {
                 $doc->addScript('http://code.jquery.com/jquery.min.js');
             }
-            $doc->addScript($this->baseurl . 'modules/mod_yatm/tmpl/js/jquery.carousel.min.js');
+            $doc->addScript(JURI::base(TRUE) . '/modules/mod_yatm/tmpl/js/jquery.carousel.min.js');
             $js = '(function ($) {
                 $().ready(function () {
                     $("div.yatm").carousel({
@@ -129,7 +129,7 @@ class modYatmHelper {
 
     function loadCss($params, $doc) {
         if ($params->get('loadcss')) {
-            $doc->addStyleSheet($this->baseurl . 'modules/mod_yatm/tmpl/css/yatm.css');
+            $doc->addStyleSheet(JURI::base(TRUE) . '/modules/mod_yatm/tmpl/css/yatm.css');
             $css = '.yatm {
         	    width   : ' . htmlspecialchars($params->get('containerwidth')) . ';
         	    padding : 0 ' . htmlspecialchars($params->get('buttondistance')) . ';

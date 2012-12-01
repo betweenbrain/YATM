@@ -36,7 +36,7 @@ function linkEntities($result) {
         $url            = 'http://search.twitter.com/search?q=';
         $obj            = $hashtag['text'];
         $replacement    = '<a href="' . $url . $obj . '" >#' . $obj . '</a>';
-        $result['text'] = preg_replace("/#$obj/i", $replacement, $result['text']);
+        $result->text = preg_replace("/#$obj/i", $replacement, $result->text);
     }
 
     // Link mentions
@@ -44,7 +44,7 @@ function linkEntities($result) {
         $url            = 'http://twitter.com/';
         $obj            = $mention['screen_name'];
         $replacement    = '<a href="' . $url . $obj . '" >@' . $obj . '</a>';
-        $result['text'] = preg_replace("/@$obj/i", $replacement, $result['text']);
+        $result->text = preg_replace("/@$obj/i", $replacement, $result->text);
     }
 
     // Link URLs
@@ -52,7 +52,7 @@ function linkEntities($result) {
         $url            = NULL;
         $obj            = str_replace(array('/'), array('\/'), $urls['url']);
         $replacement    = '<a href="' . $url . $obj . '" >' . $urls['url'] . '</a>';
-        $result['text'] = preg_replace("/$obj/i", $replacement, $result['text']);
+        $result->text = preg_replace("/$obj/i", $replacement, $result->text);
     }
 
     return $result;
@@ -65,7 +65,7 @@ function filterTweet($result) {
     // Check Tweet text for bad words
     $badwords = array('TopTag', 'Fundraising');
     foreach ($badwords as $badword) {
-        if (preg_match("/\b$badword\b/i", $result['text'])) {
+        if (preg_match("/\b$badword\b/i", $result->text)) {
             $badflag = TRUE;
         }
     }
@@ -127,7 +127,7 @@ foreach ($results['results'] as $result) {
 			@<?php echo $result['from_user'] ?>
 		</p>
 		<p>
-            <?php echo $result['text'] ?>
+            <?php echo $result->text ?>
 		</p>
 		<p>
 			<a href="https://twitter.com/<?php echo $result['from_user'] . '/status/' . $result['id']?>"><?php echo  substr($result['created_at'], 4, 7); ?></a>
