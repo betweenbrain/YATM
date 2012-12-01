@@ -15,8 +15,7 @@
 		<filename module="mod_yatm">mod_yatm.php</filename>
 		<filename>index.html</filename>
 		<filename>helper.php</filename>
-		<filename>tmpl/default.php</filename>
-		<filename>tmpl/index.html</filename>
+		<folder>tmpl</folder>
 	</files>
 	<params>
 		<param name="term"
@@ -45,15 +44,95 @@
 		       default=""
 		       label="Banned Words"
 		       description="A comma seperated list of banned words to search for in Tweets. When matched, the Tweet will not be displayed."
-		       rows="10"
+		       rows="5"
 		       cols="50"/>
 		<param name="bannedusers"
 		       type="textarea"
 		       default=""
 		       label="Banned Users"
 		       description="A comma seperated list of banned Twitter users to not display Tweets from."
-		       rows="10"
+		       rows="5"
 		       cols="50"/>
+	</params>
+	<params group="advanced">
+		<param type="spacer"
+		       default="JavaScript parameters"/>
+		<param name="loadjs"
+		       type="list"
+		       default="1"
+		       label="Load JavaScript"
+		       description="If No, none of the JavaScript included with this module will be loaded, which disables the following settings.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="loadjquery"
+		       type="list"
+		       default="1"
+		       label="Load jQuery"
+		       description="The carousel included with this module requires jQuery. Choose No if your site loads it elsewhere.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="dispItems"
+		       type="text"
+		       default="3"
+		       label="Display Items"
+		       description="Number of items to display at once."
+		       size="15"/>
+		<param name="loop"
+		       type="list"
+		       default="1"
+		       label="Loop"
+		       description="If yes, loops the carousel.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="autoSlide"
+		       type="list"
+		       default="1"
+		       label="Auto Slide"
+		       description="If yes, automatically click the Next button at a given interval">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="autoSlideInterval"
+		       type="text"
+		       default="3000"
+		       label="Auto Slide Interval"
+		       description="The delay between each click using the autoSlide option."
+		       size="15"/>
+		<param type="spacer"
+		       default=" "/>
+		<param type="spacer"
+		       default="CSS parameters"/>
+		<param name="loadcss"
+		       type="list"
+		       default="1"
+		       label="Load CSS"
+		       description="If yes, loads basic stylesheet and the following settings. No allows you to custom define everything in your template.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="containerwidth"
+		       type="text"
+		       default="600px"
+		       label="Container Width"
+		       description="Width of the outter element."
+		       size="15"/>
+		<param name="tweetwidth"
+		       type="text"
+		       default="200px"
+		       label="Tweet Width"
+		       description="Width of each Tweet element."
+		       size="15"/>
+		<param name="buttondistance"
+		       type="text"
+		       default="75px"
+		       label="Button Distance"
+		       description="How far from the Carousel edges left/right should the buttons be located. "
+		       size="15"/>
+	</params>
+	<params group="other">
 		<param name="moduleclass_sfx"
 		       type="text"
 		       default=""

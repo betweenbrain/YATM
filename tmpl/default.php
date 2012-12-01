@@ -8,49 +8,47 @@
  * License    GNU GPL v3 or later
  */
 
-// Returns a reference to the global document object
-$doc = JFactory::getDocument();
-$doc->addScript('http://platform.twitter.com/widgets.js');
 ?>
-
 <div class="yatm<?php echo $params->get('moduleclass_sfx'); ?>">
-<?php foreach ($results['results'] as $result) {
+	<ul>
+        <?php foreach ($results['results'] as $result) {
 
-    $badflag = modYatmHelper::filterTweet($result, $params);
+        $badflag = modYatmHelper::filterTweet($result, $params);
 
-    if (!$badflag) {
+        if (!$badflag) {
 
-        $result = modYatmHelper::linkEntities($result);
+            $result = modYatmHelper::linkEntities($result);
 
-        ?>
-		<div>
-			<a href="https://twitter.com/<?php echo $result['from_user'] ?>">
-				<img src="<?php echo $result['profile_image_url'] ?>" />
-			</a>
-			<a href="https://twitter.com/<?php echo $result['from_user'] ?>">
-                <?php echo $result['from_user_name'] ?>
-			</a>
-			<p>
-				@<?php echo $result['from_user'] ?>
-			</p>
-			<p>
-                <?php echo $result['text'] ?>
-			</p>
-			<p>
-				<a href="https://twitter.com/<?php echo $result['from_user'] . '/status/' . $result['id']?>"><?php echo  substr($result['created_at'], 4, 7); ?></a>
-			</p>
-			<a href="https://twitter.com/intent/tweet?in_reply_to=<?php echo $result['id'] ?>">
-				Reply
-			</a>
-			<a href="https://twitter.com/intent/retweet?tweet_id=<?php echo $result['id'] ?>&via=betweenbrain">
-				Retweet
-			</a>
-			<a href="https://twitter.com/intent/favorite?tweet_id=<?php echo $result['id'] ?>">
-				Favorite
-			</a>
-		</div>
-        <?php
+            ?>
+			<li>
+				<a class="from-user" href="https://twitter.com/<?php echo $result['from_user'] ?>">
+					<img class="profile-image" src="<?php echo $result['profile_image_url'] ?>" />
+				</a>
+				<a class="from-user" href="https://twitter.com/<?php echo $result['from_user'] ?>">
+                    <?php echo $result['from_user_name'] ?>
+				</a>
+				<p class="at-user">
+					@<?php echo $result['from_user'] ?>
+				</p>
+				<p class="text">
+                    <?php echo $result['text'] ?>
+				</p>
+				<p class="status">
+					<a href="https://twitter.com/<?php echo $result['from_user'] . '/status/' . $result['id']?>"><?php echo  substr($result['created_at'], 4, 7); ?></a>
+				</p>
+				<a class="reply" href="https://twitter.com/intent/tweet?in_reply_to=<?php echo $result['id'] ?>">
+					Reply
+				</a>
+				<a class="retweet" href="https://twitter.com/intent/retweet?tweet_id=<?php echo $result['id'] ?>&via=betweenbrain">
+					Retweet
+				</a>
+				<a class="favorite" href="https://twitter.com/intent/favorite?tweet_id=<?php echo $result['id'] ?>">
+					Favorite
+				</a>
+			</li>
+            <?php
+        }
     }
-}
-?>
+        ?>
+	</ul>
 </div>
