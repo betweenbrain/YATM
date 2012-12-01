@@ -18,6 +18,8 @@
 .yatm li {
 	float           : left;
 	list-style-type : none;
+	position        : relative;
+	left            : -40px;
 }
 
 .yatm .carousel-previous {
@@ -28,6 +30,6 @@
 
 .yatm .carousel-next {
 	position : absolute;
-	right     : 0;
+	right    : 0;
 	top      : 50%;
 }
