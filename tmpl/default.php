@@ -8,15 +8,20 @@
  * License    GNU GPL v3 or later
  */
 
+//instantiate our class
+$tweet = new modYatmHelper();
 ?>
 <div class="yatm<?php echo $params->get('moduleclass_sfx'); ?>">
 	<ul>
         <?php foreach ($results->results as $result) {
+
         // Filter unwanted Tweets
-        modYatmHelper::filterTweet($result, $params);
-        // Link Tweet entities
-        modYatmHelper::linkEntities($result);
+        $badflag = $tweet->filterTweet($result, $params);
+
         if (!$badflag) {
+            // Link Tweet entities
+            $tweet->linkEntities($result);
+
             ?>
 			<li>
 				<a class="from-user" href="https://twitter.com/<?php echo $result->from_user ?>">
