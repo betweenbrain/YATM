@@ -24,6 +24,12 @@
 		       label="Search Term"
 		       description="The term to search for on Twitter"
 		       size="15"/>
+		<param name="via"
+		       type="text"
+		       default=""
+		       label="Retweet Via"
+		       description="Twitter username to retweet via."
+		       size="15"/>
 		<param name="rpp"
 		       type="text"
 		       default="15"

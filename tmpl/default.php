@@ -10,6 +10,7 @@
 
 //instantiate our class
 $tweet = new modYatmHelper();
+$via   = $term = htmlspecialchars($params->get('via'));
 ?>
 <div class="yatm<?php echo $params->get('moduleclass_sfx'); ?>">
 	<ul>
@@ -21,7 +22,6 @@ $tweet = new modYatmHelper();
         if (!$badflag) {
             // Link Tweet entities
             $tweet->linkEntities($result);
-
             ?>
 			<li>
 				<a class="from-user" href="https://twitter.com/<?php echo $result->from_user ?>">
@@ -42,7 +42,7 @@ $tweet = new modYatmHelper();
 				<a class="reply" href="https://twitter.com/intent/tweet?in_reply_to=<?php echo $result->id ?>">
 					Reply
 				</a>
-				<a class="retweet" href="https://twitter.com/intent/retweet?tweet_id=<?php echo $result->id ?>&via=betweenbrain">
+				<a class="retweet" href="https://twitter.com/intent/retweet?tweet_id=<?php echo $result->id ?><?php if ($via) {echo '&via=' . $via;} ?>">
 					Retweet
 				</a>
 				<a class="favorite" href="https://twitter.com/intent/favorite?tweet_id=<?php echo $result->id ?>">
