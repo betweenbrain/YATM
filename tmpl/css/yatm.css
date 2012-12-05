@@ -15,7 +15,7 @@
 	position : relative;
 }
 
-.yatm li {
+.yatm .tweet {
 	float           : left;
 	list-style-type : none;
 	position        : relative;
@@ -34,7 +34,47 @@
 	top      : 50%;
 }
 
-
 .yatm .carousel-wrap {
-	padding-bottom: 45px;
+	padding-bottom : 45px;
+}
+
+.yatm .user {
+	position      : relative;
+	width         : 100%;
+	float         : left;
+	margin-bottom : 10px;
+}
+
+.yatm .profile-image {
+	float : left;
+}
+
+.yatm .from-user,
+.yatm .at-user {
+	position : absolute;
+	left     : 58px;
+}
+
+.yatm .from-user {
+	bottom : 20px;
+}
+
+.yatm .at-user {
+	bottom : 0;
+}
+
+.yatm .text {
+	width         : 100%;
+	float         : left;
+	margin-bottom : 10px;
+}
+
+.yatm .actions {
+	float : right;
+}
+
+.yatm .actions li {
+	list-style-type : none;
+	float           : left;
+	width           : auto;
 }
