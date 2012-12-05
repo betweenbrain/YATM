@@ -13,6 +13,7 @@
 
 .yatm {
 	position : relative;
+	outline  : 0;
 }
 
 .yatm .tweet {
