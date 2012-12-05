@@ -1,5 +1,4 @@
 <?php defined('_JEXEC') or die;
-
 /**
  * File       default.php
  * Created    11/29/12 11:13 PM
@@ -7,10 +6,6 @@
  * Copyright  Copyright (C) 2012 betweenbrain llc.
  * License    GNU GPL v3 or later
  */
-
-//instantiate our class
-$tweet = new modYatmHelper();
-$via   = $term = htmlspecialchars($params->get('via'));
 ?>
 <div class="yatm<?php echo $params->get('moduleclass_sfx'); ?>">
 	<ul>
