@@ -21,6 +21,7 @@
 	list-style-type : none;
 	position        : relative;
 	left            : -40px;
+	height          : 150px;
 }
 
 .yatm .carousel-previous {
@@ -70,8 +71,18 @@
 	margin-bottom : 10px;
 }
 
+.yatm .actions,
+.yatm .status {
+	position : absolute;
+	bottom   : 0;
+}
+
+.yatm .status {
+	left : 0;
+}
+
 .yatm .actions {
-	float : right;
+	right : 0;
 }
 
 .yatm .actions li {
