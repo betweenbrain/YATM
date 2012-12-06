@@ -15,6 +15,11 @@ class modYatmHelper {
      */
     protected $params;
 
+    /**
+     * Flag to determine whether data is cached or to load fresh
+     */
+    public $isCached = FALSE;
+
     public function __construct($params) {
         // Store the module params
         $this->params = $params;
@@ -50,6 +55,8 @@ class modYatmHelper {
         $json = curl_exec($curl);
 
         $results = json_decode($json);
+
+        $this->compileCache($json);
 
         return $results;
     }
@@ -114,21 +121,25 @@ class modYatmHelper {
         return $bannedflag;
     }
 
-    function checkCache() {
-        if (file_exists(JPATH_CACHE . 'yatmtweets.json')) {
-            $results = file_get_contents(JPATH_CACHE . 'yatmtweets.json');
-            $results = json_decode($results);
+    function getTweets() {
+        if (file_exists(JPATH_CACHE . '/mod_yatm/yatmtweets.json')) {
+            $tweets         = file_get_contents(JPATH_CACHE . '/mod_yatm/yatmtweets.json');
+            $tweets         = json_decode($tweets);
+            $this->isCached = TRUE;
 
         } else {
-            $results = $this->searchTwitter();
+            $tweets = $this->searchTwitter();
         }
 
-        return $results;
+        return $tweets;
 
     }
 
-    function compileCache() {
-
+    function compileCache($json) {
+        if (!$this->isCached) {
+            file_put_contents(JPATH_CACHE . '/mod_yatm/yatmtweets.json', $json);
+            $this->isCached = TRUE;
+        }
     }
 
 }
