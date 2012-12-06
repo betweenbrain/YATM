@@ -15,13 +15,13 @@ $app = JFactory::getApplication();
 // Global document object
 $doc = JFactory::getDocument();
 //instantiate our class
-$tweet = new modYatmHelper();
+$tweet = new modYatmHelper($params);
 // Retrieve the search results
-$results = modYatmHelper::searchTwitter($params);
+$results = $tweet->searchTwitter($params);
 // @via parameter
 $via = htmlspecialchars($params->get('via'));
-// We need a body for the brains
-require(JModuleHelper::getLayoutPath('mod_yatm'));
+// Render output
+require JModuleHelper::getLayoutPath('mod_yatm');
 
 // Load JS
 if ($params->get('loadjs')) {

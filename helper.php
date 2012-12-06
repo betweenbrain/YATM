@@ -10,6 +10,16 @@
 
 class modYatmHelper {
 
+    /**
+     * Module parameters
+     */
+    protected $params;
+
+    public function __construct($params) {
+        // Store the module params
+        $this->params = $params;
+    }
+
     function searchTwitter($params) {
 
         // get parameters from the module's configuration
