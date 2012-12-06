@@ -20,12 +20,12 @@ class modYatmHelper {
         $this->params = $params;
     }
 
-    function searchTwitter($params) {
+    function searchTwitter() {
 
         // get parameters from the module's configuration
-        $term = htmlspecialchars($params->get('term'));
-        $type = $params->get('type');
-        $rpp  = htmlspecialchars($params->get('rpp'));
+        $term = htmlspecialchars($this->params->get('term'));
+        $type = $this->params->get('type');
+        $rpp  = htmlspecialchars($this->params->get('rpp'));
 
         // build the search URL
         $url = 'http://search.twitter.com/search.json?q=';
@@ -83,12 +83,12 @@ class modYatmHelper {
         return $result;
     }
 
-    function filterTweet($result, $params) {
+    function filterTweet($result) {
         // Clear the bad flag
         $bannedflag = NULL;
 
         // retrieve the parameter
-        $bannedwords = htmlspecialchars($params->get('bannedwords'));
+        $bannedwords = htmlspecialchars($this->params->get('bannedwords'));
         // check for any input
         if ($bannedwords) {
             // remove spaces around commas, make it an array
@@ -101,7 +101,7 @@ class modYatmHelper {
             }
         }
 
-        $bannedusers = htmlspecialchars($params->get('bannedusers'));
+        $bannedusers = htmlspecialchars($this->params->get('bannedusers'));
         if ($bannedusers) {
             $bannedusers = explode(',', (str_replace(array(', ', ' , ', ' ,'), ',', $bannedusers)));
             foreach ($bannedusers as $banneduser) {
@@ -113,5 +113,6 @@ class modYatmHelper {
 
         return $bannedflag;
     }
+
 }
 
