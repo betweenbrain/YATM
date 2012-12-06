@@ -139,6 +139,19 @@
 		       size="15"/>
 	</params>
 	<params group="other">
+		<param name="cache"
+		       type="list"
+		       default="0"
+		       label="Caching"
+		       description="Select whether or not to cache the content of this module.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="cachetime"
+		       type="text"
+		       default="15"
+		       label="Cache Time"
+		       description="The time before the module cache expires."/>
 		<param name="moduleclass_sfx"
 		       type="text"
 		       default=""
