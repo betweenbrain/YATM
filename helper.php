@@ -122,16 +122,37 @@ class modYatmHelper {
     }
 
     function getTweets() {
-        if (file_exists(JPATH_CACHE . '/mod_yatm/yatmtweets.json')) {
-            $tweets         = file_get_contents(JPATH_CACHE . '/mod_yatm/yatmtweets.json');
-            $tweets         = json_decode($tweets);
-            $this->isCached = TRUE;
-
+        if ($this->params->get('cache') == 1) {
+            return $this->checkCache();
         } else {
-            $tweets = $this->searchTwitter();
+            return $this->searchTwitter();
         }
+    }
 
-        return $tweets;
+    function checkCache() {
+        // Cache file
+        $tweetCache = JPATH_CACHE . '/mod_yatm/yatmtweets.json';
+        // Check if the cache file exist
+        if (file_exists($tweetCache)) {
+            // Convert user input max cache age to minutes
+            $cacheTime = ($this->params->get('cachetime', 15)) * 60;
+            // Get age of cache file
+            $cacheAge = filemtime($tweetCache);
+
+            // Check if cache has expired
+            if ((time() - $cacheAge) >= $cacheTime) {
+                unlink($tweetCache);
+                $this->isCached = FALSE;
+
+            } else {
+                $this->isCached = TRUE;
+                $tweets         = file_get_contents($tweetCache);
+
+                return json_decode($tweets);
+            }
+        } else {
+            return $this->searchTwitter();
+        }
 
     }
 
