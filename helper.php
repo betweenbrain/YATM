@@ -114,5 +114,22 @@ class modYatmHelper {
         return $bannedflag;
     }
 
+    function checkCache() {
+        if (file_exists(JPATH_CACHE . 'yatmtweets.json')) {
+            $results = file_get_contents(JPATH_CACHE . 'yatmtweets.json');
+            $results = json_decode($results);
+
+        } else {
+            $results = $this->searchTwitter();
+        }
+
+        return $results;
+
+    }
+
+    function compileCache() {
+
+    }
+
 }
 

@@ -17,7 +17,7 @@ $doc = JFactory::getDocument();
 //instantiate our class
 $tweet = new modYatmHelper($params);
 // Retrieve the search results
-$results = $tweet->searchTwitter();
+$results = $tweet->checkCache();
 // @via parameter
 $via = htmlspecialchars($params->get('via'));
 // Render output
