@@ -38,7 +38,7 @@ if ($params->get('loadjs')) {
                     autoSlide        :' . ($params->get('autoSlide') ? 'true' : 'false') . ',
                     autoSlideInterval:' . htmlspecialchars($params->get('autoSlideInterval')) . ',
                     nextBtn          : "<a class=\"next\" title=\"Next\">Next</a>",
-                    prevBtn          : "<a class=\"prev\" title=\"Previous\">Previous</a>"
+                    prevBtn          : "<a class=\"prev\" title=\"Previous\">Previous</a>",
                 });
             });
         })(jQuery)';
