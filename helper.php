@@ -198,15 +198,15 @@ class modYatmHelper {
     function fetchTweets() {
         if (file_exists(JPATH_CACHE . '/mod_yatm/clean_tweets.json')) {
             $json   = file_get_contents(JPATH_CACHE . '/mod_yatm/clean_tweets.json');
-            $tweets = json_decode($json, true);
+            $tweets = json_decode($json, TRUE);
         } elseif (file_exists(JPATH_CACHE . '/mod_yatm/raw_tweets.json')) {
             $json   = file_get_contents(JPATH_CACHE . '/mod_yatm/raw_tweets.json');
             $tweets = $this->compileTweets($json);
-            $this->compileCleanCache(json_encode($tweets));
+            $this->compileCache(json_encode($tweets), "clean");
         } else {
             $json   = $this->searchTwitter();
             $tweets = $this->compileTweets($json);
-            $this->compileRawCache($json);
+            $this->compileCache($json);
         }
 
         return $tweets;
@@ -217,15 +217,10 @@ class modYatmHelper {
      *
      * @since  0.2
      */
-    protected function compileRawCache($json) {
-        file_put_contents(JPATH_CACHE . '/mod_yatm/raw_tweets.json', $json);
-        $this->isRawCache = TRUE;
+    protected function compileCache($json, $type = "raw") {
+        file_put_contents(JPATH_CACHE . '/mod_yatm/' . $type . '_tweets.json', $json);
     }
 
-    protected function compileCleanCache($json) {
-        file_put_contents(JPATH_CACHE . '/mod_yatm/clean_tweets.json', $json);
-        $this->isCleanCache = TRUE;
-    }
     /*
         function checkCacheQuantity() {
             // Retrieve number of required good Tweets for filtered cache
