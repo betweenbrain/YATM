@@ -14,9 +14,9 @@ require_once(dirname(__FILE__) . DS . 'helper.php');
 $app = JFactory::getApplication();
 // Global document object
 $doc = JFactory::getDocument();
-//instantiate our class
+// Instantiate our class
 $tweet = new modYatmHelper($params);
-// Retrieve the search results
+// Fetch the Tweets
 $tweets = $tweet->fetchTweets();
 // @via parameter
 $via = htmlspecialchars($params->get('via'));

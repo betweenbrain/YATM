@@ -22,14 +22,14 @@ class modYatmHelper {
      * @var    boolean
      * @since  0.2
      */
-    public $isCached = FALSE;
+    public $isRawCache = FALSE;
 
     /**
      * Flag to determine whether filtered Tweet cache exists
      * @var    boolean
      * @since  0.2
      */
-    public $filteredCache = FALSE;
+    public $isCleanCache = FALSE;
 
     /**
      * Container for the formatted module data
@@ -51,14 +51,20 @@ class modYatmHelper {
         $this->params = $params;
     }
 
+    /**
+     * Function to search Twitter
+     *
+     * @return json
+     * @since  0.2
+     */
     function searchTwitter() {
 
-        // get parameters from the module's configuration
+        // Get parameters from the module's configuration
         $term = htmlspecialchars($this->params->get('term'));
         $type = $this->params->get('type');
         $rpp  = htmlspecialchars($this->params->get('rpp'));
 
-        // build the search URL
+        // Build the search URL
         $url = 'http://search.twitter.com/search.json?q=';
         $url .= '%23' . $term;
         $url .= '&result_type=' . $type;
@@ -80,18 +86,53 @@ class modYatmHelper {
 
         $json = curl_exec($curl);
 
-        $this->compileRawCache($json);
+        return $json;
 
     }
 
-    function linkEntities($result) {
+    /**
+     * Function to compile Tweets for rendering
+     *
+     * @param $json
+     * @return array
+     * @since  0.2
+     */
+    function compileTweets($json) {
+        // Decode json input
+        $tweets = json_decode($json);
+        // Process Tweets
+        foreach ($tweets->results as $result) {
+            // Flag out bad Tweets
+            $banned = $this->filterTweet($result);
+            // Load only good tweets
+            if (!$banned) {
+                // Link Tweet entities
+                $result = $this->linkEntities($result);
+                // Build final Tweet array
+                $tweet[] = array('from_user' => $result->from_user, 'profile_image_url' => $result->profile_image_url, 'from_user_name' => $result->from_user_name, 'text' => $result->text, 'id' => $result->id, 'created_at' => $result->created_at);
+            }
+        }
+
+        // Return array of compiled Tweets
+        return $tweet;
+
+    }
+
+    /**
+     * Function to link Tweet entities in Tweet text (hashtags, mentions, and URLs)
+     *
+     * @param $result
+     * @return array
+     * @since  0.2
+     */
+    protected function linkEntities($result) {
 
         // Link hashtags
         foreach ($result->entities->hashtags as $hashtag) {
             $url          = 'http://search.twitter.com/search?q=';
             $obj          = $hashtag->text;
             $replacement  = '<a href="' . $url . $obj . '" >#' . $obj . '</a>';
-            $result->text = preg_replace("/#$obj/i", $replacement, $result->text);
+            $result->text = preg_replace("|#$obj|i", $replacement, $result->text);
         }
 
         // Link mentions
@@ -99,29 +140,35 @@ class modYatmHelper {
             $url          = 'http://twitter.com/';
             $obj          = $mention->screen_name;
             $replacement  = '<a href="' . $url . $obj . '" >@' . $obj . '</a>';
-            $result->text = preg_replace("/@$obj/i", $replacement, $result->text);
+            $result->text = preg_replace("|@$obj|i", $replacement, $result->text);
         }
 
         // Link URLs
         foreach ($result->entities->urls as $urls) {
             $url          = NULL;
-            $obj          = str_replace(array('/'), array('\/'), $urls->url);
+            $obj          = $urls->url;
             $replacement  = '<a href="' . $url . $obj . '" >' . $urls->url . '</a>';
-            $result->text = preg_replace("/$obj/i", $replacement, $result->text);
+            $result->text = preg_replace("|$obj|i", $replacement, $result->text);
         }
 
         return $result;
     }
 
-    function filterTweet($result) {
+    /**
+     * Function to check Tweet for text containing banned words or by a banned Tweeter
+     *
+     * @param $result
+     * @return var
+     * @since  0.2
+     */
+    protected function filterTweet($result) {
         // Clear the bad flag
         $bannedflag = NULL;
-
-        // retrieve the parameter
+        // Retrieve the banned word list
         $bannedwords = htmlspecialchars($this->params->get('bannedwords'));
-        // check for any input
+        // Check the banned word list for the presence of any banned words
         if ($bannedwords) {
-            // remove spaces around commas, make it an array
+            // Remove spaces around commas, make it an array
             $bannedwords = explode(',', (str_replace(array(', ', ' , ', ' ,'), ',', $bannedwords)));
             // Check Tweet text for bad words
             foreach ($bannedwords as $bannedword) {
@@ -131,9 +178,13 @@ class modYatmHelper {
             }
         }
 
+        // Retrieve the banned Tweeter list
         $bannedusers = htmlspecialchars($this->params->get('bannedusers'));
+        // Check the banned Tweeter list for the presence of any banned Tweeters
         if ($bannedusers) {
+            // Remove spaces around commas, make it an array
             $bannedusers = explode(',', (str_replace(array(', ', ' , ', ' ,'), ',', $bannedusers)));
+            // Check Tweet to see if it is from a banned Tweeter
             foreach ($bannedusers as $banneduser) {
                 if (preg_match("/\b$banneduser\b/i", $result->from_user)) {
                     $bannedflag = TRUE;
@@ -145,85 +196,82 @@ class modYatmHelper {
     }
 
     function fetchTweets() {
-        if ($this->params->get('cache') == 1) {
-            return $this->checkCache();
+        if (file_exists(JPATH_CACHE . '/mod_yatm/clean_tweets.json')) {
+            $json   = file_get_contents(JPATH_CACHE . '/mod_yatm/clean_tweets.json');
+            $tweets = json_decode($json, true);
+        } elseif (file_exists(JPATH_CACHE . '/mod_yatm/raw_tweets.json')) {
+            $json   = file_get_contents(JPATH_CACHE . '/mod_yatm/raw_tweets.json');
+            $tweets = $this->compileTweets($json);
+            $this->compileCleanCache(json_encode($tweets));
         } else {
-            return $this->searchTwitter();
+            $json   = $this->searchTwitter();
+            $tweets = $this->compileTweets($json);
+            $this->compileRawCache($json);
         }
+
+        return $tweets;
     }
 
-    function filterRawCache() {
-        // if ($this->isCached === 1) {
-        $json    = file_get_contents(JPATH_CACHE . '/mod_yatm/raw_tweets.json');
-        $results = json_decode($json);
-        /*
-         } else {
-              $this->searchTwitter();
-          }
-        */
-        // Retrieve number of required good Tweets for filtered cache
-        $cachemin = $this->params->get('cachemin', 4);
-        // Define filtered cache file
-        $filteredCache = JPATH_CACHE . '/mod_yatm/filtered_tweets.json';
-        foreach ($results->results as $index => $result) {
-            // Flag out bad Tweets
-            $banned = $this->filterTweet($result);
-            // Load only good tweets
-            if (!$banned) {
-                // Link Tweet entities
-                $result = $this->linkEntities($result);
-                // Build filtered Tweet array
-                $tweet[] = array('from_user' => $result->from_user, 'profile_image_url' => $result->profile_image_url, 'from_user_name' => $result->from_user_name, 'text' => $result->text, 'id' => $result->id, 'created_at' => $result->created_at);
+    /**
+     * Function to compile cache file
+     *
+     * @since  0.2
+     */
+    protected function compileRawCache($json) {
+        file_put_contents(JPATH_CACHE . '/mod_yatm/raw_tweets.json', $json);
+        $this->isRawCache = TRUE;
+    }
+
+    protected function compileCleanCache($json) {
+        file_put_contents(JPATH_CACHE . '/mod_yatm/clean_tweets.json', $json);
+        $this->isCleanCache = TRUE;
+    }
+    /*
+        function checkCacheQuantity() {
+            // Retrieve number of required good Tweets for filtered cache
+            $cachemin = $this->params->get('cachemin', 4);
+            // Check for suffecient good Tweets to caching
+            if ($tweet[$cachemin]) {
+                // Toggle filtered cache flag
+                $this->filteredCache = TRUE;
+                // Write filtered Tweet cache
+                file_put_contents($filteredCache, json_encode($tweet));
             }
         }
-        // Check for suffecient good Tweets to caching
-        if ($tweet[$cachemin]) {
-            // Toggle filtered cache flag
-            $this->filteredCache = TRUE;
-            // Write filtered Tweet cache
-            file_put_contents($filteredCache, json_encode($tweet));
-        }
-    }
 
-    function checkCache() {
-        // Cache file
-        $cache = JPATH_CACHE . '/mod_yatm/filtered_tweets.json';
+        function checkCache() {
+            // Cache file
+            $cache = JPATH_CACHE . '/mod_yatm/filtered_tweets.json';
 
-        $this->checkCacheAge($cache);
+            $this->checkCacheAge($cache);
 
-        // Check if the cache file exist
-        if (file_exists($cache)) {
-            $this->isCached = TRUE;
-            $tweets         = file_get_contents($cache);
+            // Check if the cache file exist
+            if (file_exists($cache)) {
+                $this->isCached = TRUE;
+                $tweets         = file_get_contents($cache);
 
-            return json_decode($tweets);
+                return json_decode($tweets);
 
-        } else {
-            $this->filterRawCache();
-        }
-    }
-
-    function checkCacheAge($cache) {
-        if (file_exists($cache)) {
-            // Convert user input max cache age to minutes
-            $cacheTime = ($this->params->get('cachetime', 15)) * 60;
-            // Get age of cache file
-            $cacheAge = filemtime($cache);
-            // Check if cache has expired
-            if ((time() - $cacheAge) >= $cacheTime) {
-                // If it's stale, delete it an set flag
-                unlink($cache);
-                $this->isCached = FALSE;
+            } else {
+                $this->filterRawCache();
             }
         }
-    }
 
-    function compileRawCache($json) {
-        if (!$this->isCached) {
-            file_put_contents(JPATH_CACHE . '/mod_yatm/raw_tweets.json', $json);
-            $this->isCached = TRUE;
+        function checkCacheAge($cache) {
+            if (file_exists($cache)) {
+                // Convert user input max cache age to minutes
+                $cacheTime = ($this->params->get('cachetime', 15)) * 60;
+                // Get age of cache file
+                $cacheAge = filemtime($cache);
+                // Check if cache has expired
+                if ((time() - $cacheAge) >= $cacheTime) {
+                    // If it's stale, delete it an set flag
+                    unlink($cache);
+                    $this->isCached = FALSE;
+                }
+            }
         }
-    }
+    */
 
 }
 
