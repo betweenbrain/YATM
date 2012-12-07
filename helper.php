@@ -12,14 +12,40 @@ class modYatmHelper {
 
     /**
      * Module parameters
+     * @var    boolean
+     * @since  0.2
      */
     protected $params;
 
     /**
      * Flag to determine whether data is cached or to load fresh
+     * @var    boolean
+     * @since  0.2
      */
     public $isCached = FALSE;
 
+    /**
+     * Flag to determine whether filtered Tweet cache exists
+     * @var    boolean
+     * @since  0.2
+     */
+    public $filteredCache = FALSE;
+
+    /**
+     * Container for the formatted module data
+     *
+     * @var    array
+     * @since  0.2
+     */
+    public $tweets = array();
+
+    /**
+     * Constructor
+     *
+     * @param   JRegistry  $params  The module parameters
+     *
+     * @since  0.2
+     */
     public function __construct($params) {
         // Store the module params
         $this->params = $params;
@@ -54,11 +80,8 @@ class modYatmHelper {
 
         $json = curl_exec($curl);
 
-        $results = json_decode($json);
+        $this->compileRawCache($json);
 
-        $this->compileCache($json);
-
-        return $results;
     }
 
     function linkEntities($result) {
@@ -121,7 +144,7 @@ class modYatmHelper {
         return $bannedflag;
     }
 
-    function getTweets() {
+    function fetchTweets() {
         if ($this->params->get('cache') == 1) {
             return $this->checkCache();
         } else {
@@ -129,42 +152,75 @@ class modYatmHelper {
         }
     }
 
-    function checkCacheAge($tweetCache) {
-        if (file_exists($tweetCache)) {
-            // Convert user input max cache age to minutes
-            $cacheTime = ($this->params->get('cachetime', 15)) * 60;
-            // Get age of cache file
-            $cacheAge = filemtime($tweetCache);
-            // Check if cache has expired
-            if ((time() - $cacheAge) >= $cacheTime) {
-                // If it's stale, delete it an set flag
-                unlink($tweetCache);
-                $this->isCached = FALSE;
+    function filterRawCache() {
+        // if ($this->isCached === 1) {
+        $json    = file_get_contents(JPATH_CACHE . '/mod_yatm/raw_tweets.json');
+        $results = json_decode($json);
+        /*
+         } else {
+              $this->searchTwitter();
+          }
+        */
+        // Retrieve number of required good Tweets for filtered cache
+        $cachemin = $this->params->get('cachemin', 4);
+        // Define filtered cache file
+        $filteredCache = JPATH_CACHE . '/mod_yatm/filtered_tweets.json';
+        foreach ($results->results as $index => $result) {
+            // Flag out bad Tweets
+            $banned = $this->filterTweet($result);
+            // Load only good tweets
+            if (!$banned) {
+                // Link Tweet entities
+                $result = $this->linkEntities($result);
+                // Build filtered Tweet array
+                $tweet[] = array('from_user' => $result->from_user, 'profile_image_url' => $result->profile_image_url, 'from_user_name' => $result->from_user_name, 'text' => $result->text, 'id' => $result->id, 'created_at' => $result->created_at);
             }
+        }
+        // Check for suffecient good Tweets to caching
+        if ($tweet[$cachemin]) {
+            // Toggle filtered cache flag
+            $this->filteredCache = TRUE;
+            // Write filtered Tweet cache
+            file_put_contents($filteredCache, json_encode($tweet));
         }
     }
 
     function checkCache() {
         // Cache file
-        $tweetCache = JPATH_CACHE . '/mod_yatm/yatmtweets.json';
-        $this->checkCacheAge($tweetCache);
+        $cache = JPATH_CACHE . '/mod_yatm/filtered_tweets.json';
+
+        $this->checkCacheAge($cache);
 
         // Check if the cache file exist
-        if (file_exists($tweetCache)) {
+        if (file_exists($cache)) {
             $this->isCached = TRUE;
-            $tweets         = file_get_contents($tweetCache);
+            $tweets         = file_get_contents($cache);
 
             return json_decode($tweets);
 
         } else {
-            return $this->searchTwitter();
+            $this->filterRawCache();
         }
-
     }
 
-    function compileCache($json) {
+    function checkCacheAge($cache) {
+        if (file_exists($cache)) {
+            // Convert user input max cache age to minutes
+            $cacheTime = ($this->params->get('cachetime', 15)) * 60;
+            // Get age of cache file
+            $cacheAge = filemtime($cache);
+            // Check if cache has expired
+            if ((time() - $cacheAge) >= $cacheTime) {
+                // If it's stale, delete it an set flag
+                unlink($cache);
+                $this->isCached = FALSE;
+            }
+        }
+    }
+
+    function compileRawCache($json) {
         if (!$this->isCached) {
-            file_put_contents(JPATH_CACHE . '/mod_yatm/yatmtweets.json', $json);
+            file_put_contents(JPATH_CACHE . '/mod_yatm/raw_tweets.json', $json);
             $this->isCached = TRUE;
         }
     }

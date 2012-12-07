@@ -9,52 +9,44 @@
 ?>
 <div class="yatm<?php echo $params->get('moduleclass_sfx'); ?>">
 	<ul>
-        <?php foreach ($results->results as $result) {
-        // Filter unwanted Tweets
-        $badflag = $tweet->filterTweet($result, $params);
-        // Load only non-filtered tweets
-        if (!$badflag) {
-            // Link Tweet entities
-            $tweet->linkEntities($result);
-            ?>
-			<li class="tweet">
-				<div class="user">
-					<a class="profile-image" href="https://twitter.com/<?php echo $result->from_user ?>">
-						<img class="profile-image" src="<?php echo $result->profile_image_url ?>" />
-					</a>
-					<a class="from-user" href="https://twitter.com/<?php echo $result->from_user ?>">
-                        <?php echo $result->from_user_name ?>
-					</a>
-					<p class="at-user">
-						@<?php echo $result->from_user ?>
-					</p>
-				</div>
-				<p class="text">
-                    <?php echo $result->text ?>
+        <?php foreach ($tweets as $tweet) : ?>
+		<li class="tweet">
+			<div class="user">
+				<a class="profile-image" href="https://twitter.com/<?php echo $tweet['from_user'] ?>">
+					<img class="profile-image" src="<?php echo $tweet['profile_image_url'] ?>" />
+				</a>
+				<a class="from-user" href="https://twitter.com/<?php echo $tweet['from_user'] ?>">
+                    <?php echo $tweet['from_user_name'] ?>
+				</a>
+				<p class="at-user">
+					@<?php echo $tweet['from_user'] ?>
 				</p>
-				<a class="status" href="https://twitter.com/<?php echo $result->from_user . '/status/' . $result->id ?>"><?php echo  substr($result->created_at, 4, 7); ?></a>
+			</div>
+			<p class="text">
+                <?php echo $tweet['text'] ?>
+			</p>
+			<a class="status" href="https://twitter.com/<?php echo $tweet['from_user'] . '/status/' . $tweet['id'] ?>"><?php echo substr($tweet['created_at'], 4, 7); ?></a>
 
-				<ul class="actions">
-					<li>
-						<a class="reply" href="https://twitter.com/intent/tweet?in_reply_to=<?php echo $result->id ?>">
-							Reply
-						</a>
-					</li>
-					<li>
-						<a class="retweet" href="https://twitter.com/intent/retweet?tweet_id=<?php echo $result->id ?><?php if ($via) { echo '&via=' . $via; } ?>">
-							Retweet
-						</a>
-					</li>
-					<li>
-						<a class="favorite" href="https://twitter.com/intent/favorite?tweet_id=<?php echo $result->id ?>">
-							Favorite
-						</a>
-					</li>
-				</ul>
-			</li>
-            <?php
-        }
-    }
-        ?>
+			<ul class="actions">
+				<li>
+					<a class="reply" href="https://twitter.com/intent/tweet?in_reply_to=<?php echo $tweet['id'] ?>">
+						Reply
+					</a>
+				</li>
+				<li>
+					<a class="retweet" href="https://twitter.com/intent/retweet?tweet_id=<?php echo $tweet['id'] ?><?php if ($via) {
+                        echo '&via=' . $via;
+                    } ?>">
+						Retweet
+					</a>
+				</li>
+				<li>
+					<a class="favorite" href="https://twitter.com/intent/favorite?tweet_id=<?php echo $tweet['id'] ?>">
+						Favorite
+					</a>
+				</li>
+			</ul>
+		</li>
+        <?php endforeach; ?>
 	</ul>
 </div>
