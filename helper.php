@@ -195,6 +195,10 @@ class modYatmHelper {
         return $bannedflag;
     }
 
+    /**
+     * Function to fetch valid Tweets
+     * @since  0.2
+     */
     function fetchTweets() {
         if (file_exists(JPATH_CACHE . '/mod_yatm/clean_tweets.json')) {
             $json   = file_get_contents(JPATH_CACHE . '/mod_yatm/clean_tweets.json');
@@ -222,8 +226,8 @@ class modYatmHelper {
     }
 
     /**
-     * Function to compile cache file
-     * @params $cache
+     * Function to validate cache file
+     * @params $type
      * @since  0.2
      */
     function validateCache($type) {
