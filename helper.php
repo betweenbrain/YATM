@@ -214,6 +214,7 @@ class modYatmHelper {
         } else {
             $json   = $this->searchTwitter();
             $tweets = $this->compileTweets($json);
+            // To check and remove old cache files
             $this->validateCache('clean');
             $this->validateCache('raw');
         }
@@ -227,7 +228,11 @@ class modYatmHelper {
      * @since  0.2
      */
     protected function compileCache($json, $type = "raw") {
-        file_put_contents(JPATH_CACHE . '/mod_yatm/' . $type . '_tweets.json', $json);
+        $cache = JPATH_CACHE . '/mod_yatm/' . $type . '_tweets.json';
+        file_put_contents($cache, $json);
+        if (file_exists($cache)) {
+            return TRUE;
+        }
     }
 
     /**
