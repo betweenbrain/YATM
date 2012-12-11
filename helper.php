@@ -100,22 +100,24 @@ class modYatmHelper {
     function compileTweets($json) {
         // Decode json input
         $tweets = json_decode($json);
-        // Process Tweets
-        foreach ($tweets->results as $result) {
-            // Flag out bad Tweets
-            $banned = $this->filterTweet($result);
-            // Load only good tweets
-            if (!$banned) {
-                // Link Tweet entities
-                $result = $this->linkEntities($result);
-                // Build final Tweet array
-                $tweet[] = array('from_user' => $result->from_user, 'profile_image_url' => $result->profile_image_url, 'from_user_name' => $result->from_user_name, 'text' => $result->text, 'id' => $result->id, 'created_at' => $result->created_at);
+        // Proceed only if there are Tweets in the json
+        if ($tweets) {
+            // Process Tweets
+            foreach ($tweets->results as $result) {
+                // Flag out bad Tweets
+                $banned = $this->filterTweet($result);
+                // Load only good tweets
+                if (!$banned) {
+                    // Link Tweet entities
+                    $result = $this->linkEntities($result);
+                    // Build final Tweet array
+                    $tweet[] = array('from_user' => $result->from_user, 'profile_image_url' => $result->profile_image_url, 'from_user_name' => $result->from_user_name, 'text' => $result->text, 'id' => $result->id, 'created_at' => $result->created_at);
+                }
             }
+
+            // Return array of compiled Tweets
+            return $tweet;
         }
-
-        // Return array of compiled Tweets
-        return $tweet;
-
     }
 
     /**
@@ -207,16 +209,29 @@ class modYatmHelper {
             $json   = file_get_contents(JPATH_CACHE . '/mod_yatm/raw_tweets.json');
             $tweets = $this->compileTweets($json);
             $this->compileCache(json_encode($tweets), 'clean');
+            // If cache is enabled, but there is no raw cache
         } elseif ($this->params->get('cache') && !$this->validateCache('raw')) {
-            $json   = $this->searchTwitter();
-            $tweets = $this->compileTweets($json);
-            $this->compileCache($json);
+            // Search Twitter
+            $json = $this->searchTwitter();
+            // If we have results
+            if ($json) {
+                $tweets = $this->compileTweets($json);
+                $this->compileCache($json);
+                // If there are no Twitter results, but the backup cache exists
+            } elseif (file_exists(JPATH_CACHE . '/mod_yatm/clean_bak_tweets.json')) {
+                $json   = file_get_contents(JPATH_CACHE . '/mod_yatm/clean_bak_tweets.json');
+                $tweets = json_decode($json, TRUE);
+            }
         } else {
+            // Go back to Twitter for more results if not cache exists
             $json   = $this->searchTwitter();
             $tweets = $this->compileTweets($json);
+
             // To check and remove old cache files
             $this->validateCache('clean');
+            $this->validateCache('clean_bak');
             $this->validateCache('raw');
+
         }
 
         return $tweets;
@@ -229,10 +244,12 @@ class modYatmHelper {
      */
     protected function compileCache($json, $type = "raw") {
         $cache = JPATH_CACHE . '/mod_yatm/' . $type . '_tweets.json';
-
-        file_put_contents($cache, $json);
-        if (file_exists($cache)) {
-            return TRUE;
+        // Don't compile cache if json has no data
+        if (json_decode($json)) {
+            file_put_contents($cache, $json);
+            if (file_exists($cache)) {
+                return TRUE;
+            }
         }
     }
 
@@ -274,7 +291,7 @@ class modYatmHelper {
 
     function validateCacheMin($type) {
         $cache    = JPATH_CACHE . '/mod_yatm/' . $type . '_tweets.json';
-        $altcache = JPATH_CACHE . '/mod_yatm/' . $type . '_tweets_bak.json';
+        $altcache = JPATH_CACHE . '/mod_yatm/' . $type . '_bak_tweets.json';
 
         // Retrieve number of required good Tweets for filtered cache
         $cachemin = $this->params->get('cachemin', 4);
