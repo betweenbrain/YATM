@@ -280,10 +280,11 @@ class modYatmHelper {
         $cachemin = $this->params->get('cachemin', 4);
         // Check for suffecient good Tweets to caching
         $tweet = json_decode(file_get_contents($cache), TRUE);
-        if ($tweet[$cachemin]) {
+        if (isset($tweet[$cachemin])) {
             copy($cache, $altcache);
 
             return TRUE;
+
         } else {
             return FALSE;
         }
