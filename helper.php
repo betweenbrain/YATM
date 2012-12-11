@@ -237,6 +237,7 @@ class modYatmHelper {
      */
     function validateCache($type) {
         $cache = JPATH_CACHE . '/mod_yatm/' . $type . '_tweets.json';
+
         if ($this->params->get('cache')) {
             // Define which cache we are validating
             if (file_exists($cache)) {
@@ -261,20 +262,18 @@ class modYatmHelper {
 
     }
 
-    /*
-        function checkCacheQuantity() {
-            // Retrieve number of required good Tweets for filtered cache
-            $cachemin = $this->params->get('cachemin', 4);
-            // Check for suffecient good Tweets to caching
-            if ($tweet[$cachemin]) {
-                // Toggle filtered cache flag
-                $this->filteredCache = TRUE;
-                // Write filtered Tweet cache
-                file_put_contents($filteredCache, json_encode($tweet));
-            }
+    function validateCacheMin($type) {
+        $cache = file_get_contents(JPATH_CACHE . '/mod_yatm/' . $type . '_tweets.json');
+        // Retrieve number of required good Tweets for filtered cache
+        $cachemin = $this->params->get('cachemin', 4);
+        // Check for suffecient good Tweets to caching
+        $tweet = json_decode($cache, TRUE);
+        if ($tweet[$cachemin]) {
+            return TRUE;
+        } else {
+            return FALSE;
         }
-
-    */
+    }
 
 }
 
