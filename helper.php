@@ -214,6 +214,8 @@ class modYatmHelper {
         } else {
             $json   = $this->searchTwitter();
             $tweets = $this->compileTweets($json);
+            $this->validateCache('clean');
+            $this->validateCache('raw');
         }
 
         return $tweets;
