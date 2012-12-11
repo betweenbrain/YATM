@@ -15,9 +15,9 @@ $app = JFactory::getApplication();
 // Global document object
 $doc = JFactory::getDocument();
 // Instantiate our class
-$tweet = new modYatmHelper($params);
+$yolanda = new modYatmHelper($params);
 // Fetch the Tweets
-$tweets = $tweet->fetchTweets();
+$tweets = $yolanda->fetchTweets();
 // @via parameter
 $via = htmlspecialchars($params->get('via'));
 // Render output
