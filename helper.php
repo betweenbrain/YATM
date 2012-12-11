@@ -229,6 +229,7 @@ class modYatmHelper {
      */
     protected function compileCache($json, $type = "raw") {
         $cache = JPATH_CACHE . '/mod_yatm/' . $type . '_tweets.json';
+
         file_put_contents($cache, $json);
         if (file_exists($cache)) {
             return TRUE;
@@ -242,9 +243,9 @@ class modYatmHelper {
      */
     function validateCache($type) {
         $cache = JPATH_CACHE . '/mod_yatm/' . $type . '_tweets.json';
-
+        // If caching is enabled
         if ($this->params->get('cache')) {
-            // Define which cache we are validating
+            // Check if file exists
             if (file_exists($cache)) {
                 // Convert user input max cache age to minutes
                 $cacheTime = ($this->params->get('cachetime', 15)) * 60;
@@ -255,9 +256,13 @@ class modYatmHelper {
                     // If it's stale, delete it an set flag
                     unlink($cache);
 
+                    // Return false as cache isn't valid
                     return FALSE;
                 }
+                // Cache is good, let's do some more
+                $this->validateCacheMin($type);
 
+                // Yep, it's good
                 return TRUE;
             }
             // Remove any old cache if caching is truned off
@@ -268,12 +273,16 @@ class modYatmHelper {
     }
 
     function validateCacheMin($type) {
-        $cache = file_get_contents(JPATH_CACHE . '/mod_yatm/' . $type . '_tweets.json');
+        $cache    = JPATH_CACHE . '/mod_yatm/' . $type . '_tweets.json';
+        $altcache = JPATH_CACHE . '/mod_yatm/' . $type . '_tweets_bak.json';
+
         // Retrieve number of required good Tweets for filtered cache
         $cachemin = $this->params->get('cachemin', 4);
         // Check for suffecient good Tweets to caching
-        $tweet = json_decode($cache, TRUE);
+        $tweet = json_decode(file_get_contents($cache), TRUE);
         if ($tweet[$cachemin]) {
+            copy($cache, $altcache);
+
             return TRUE;
         } else {
             return FALSE;
