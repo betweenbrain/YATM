@@ -33,7 +33,7 @@
 		<param name="rpp"
 		       type="text"
 		       default="15"
-		       label="Results"
+		       label="Maximum Results"
 		       description="How many results to return per page load."
 		       size="15"/>
 		<param name="type"
@@ -57,6 +57,38 @@
 		       default=""
 		       label="Banned Tweeters"
 		       description="A comma separated list of banned Twitter users to not display Tweets from."
+		       rows="5"
+		       cols="50"/>
+	</params>
+	<params group="advanced">
+		<param name="cache"
+		       type="list"
+		       default="0"
+		       label="Caching"
+		       description="Select whether or not to cache the content of this module.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="cachetime"
+		       type="text"
+		       default="15"
+		       label="Cache Time"
+		       description="The time before the module cache expires."/>
+		<param name="cachemin"
+		       type="text"
+		       default="4"
+		       label="Cache Minimum"
+		       description="The minimum number of successful hits for the search to be valid for caching."/>
+		<param name="moduleclass_sfx"
+		       type="text"
+		       default=""
+		       label="Module Class Suffix"
+		       description="PARAMMODULECLASSSUFFIX"/>
+		<param name="fallback"
+		       type="textarea"
+		       default=""
+		       label="Fallback Message"
+		       description="The message to be displayed if no Tweets are returned or cached."
 		       rows="5"
 		       cols="50"/>
 	</params>
@@ -137,30 +169,5 @@
 		       label="Button Distance"
 		       description="How far from the Carousel edges left/right should the buttons be located. "
 		       size="15"/>
-	</params>
-	<params group="advanced">
-		<param name="cache"
-		       type="list"
-		       default="0"
-		       label="Caching"
-		       description="Select whether or not to cache the content of this module.">
-			<option value="0">No</option>
-			<option value="1">Yes</option>
-		</param>
-		<param name="cachetime"
-		       type="text"
-		       default="15"
-		       label="Cache Time"
-		       description="The time before the module cache expires."/>
-		<param name="cachemin"
-		       type="text"
-		       default="4"
-		       label="Cache Minimum"
-		       description="The minimum number of successful hits for the search to be valid for caching."/>
-		<param name="moduleclass_sfx"
-		       type="text"
-		       default=""
-		       label="Module Class Suffix"
-		       description="PARAMMODULECLASSSUFFIX"/>
 	</params>
 </install>
