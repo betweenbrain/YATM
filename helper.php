@@ -301,10 +301,9 @@ class modYatmHelper {
             copy($cache, $altcache);
 
             return TRUE;
-
-        } else {
-            return FALSE;
         }
+
+        return FALSE;
     }
 
 }
