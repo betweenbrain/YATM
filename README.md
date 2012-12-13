@@ -34,7 +34,21 @@ In any case, if none of the cache files exist, and Twitter does not return the m
 ## Other Parameters
 The default JavaScript used by this module is jQuery Carousel from http://www.thomaslanciaux.pro/jquery/jquery_carousel.htm
 * See that page for more details
+### JavaScript
+* Load JavaScript:
+   * Yes means yes.
+   * No means no and all of the JavaScript paraneters are null and void.
+* Load jQuery: You'll likely onlyuse this for testing. When enable, it loads the latest minified version of jQuery from their CDN. I'd turn this off, and use a better solution, when you go live.
+* Display Items: How many items to display per rotation.
+* Loop (yes/no): I bet you can guess.
+* Auto Slide: If yes, start sliding the results after the `Auto Slide Interval`
 
+### CSS
+* Load CSS... well, if you have to ask...
+* Container Width: If you aren't overriding the CSS (see below) this sets the width of the outter container.
+* Item Width: The width of each item to display. 
+   * Hint - this usually equals Container Width ÷ Display Items
+* Button Distance - If you aren't overriding the CSS (seriously, see below) this is the horizontal distance from the container to positon the forward and back elements.
 
 
 ---
