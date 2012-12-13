@@ -26,8 +26,24 @@ The raw and filtered results caches are replaced if:
 The backup of the filtered cache is replaced the page load following the creation of the filtered cache is created AND if the filtered cache meets the minimum number of Tweets for display. The backup of the filtered cache never expires, it is only overwritten if a conditions are met.
 
 The filtered results cache will always be used first, unless:
-* It expires and the raw results cache exists, in which cache the raw results cache is read and filtered for disply and caching.
-* Neither the raw and filtered results caches exist, in whic cache the backup of the filtered cache is used.
+* It expires and the raw results cache exists, in which case, the raw results cache is read and filtered for disply and caching.
+* Neither the raw and filtered results caches exist, in which case, the backup of the filtered cache is used.
+
+In any case, if none of the cache files exist, and Twitter does not return the minumim umber of required Tweets, the `Fallback Message` is displayed and the built-in JavaScript options are disabled automatically.
+
+## Other Parameters
+The default JavaScript used by this module is jQuery Carousel from http://www.thomaslanciaux.pro/jquery/jquery_carousel.htm
+* See that page for more details
+
+
+
+---
+# Overrides
+You can easily override the default CSS by creating a stylesheet at /templates/yourtemplate/css/mod_yatm/yatm.css
+
+---
+# Compatability
+Tested with Joomla! 1.5
 
 
 
