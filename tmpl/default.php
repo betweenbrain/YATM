@@ -9,10 +9,10 @@
 ?>
 <div class="yatm<?php echo $params->get('moduleclass_sfx'); ?>">
     <?php
-    // Ternary; if no Tweets echo fallback message
-    echo ($tweets) ? : $fallback;
-    // If Tweets, proceed
-    if ($tweets) : ?>
+    // Check for minimum Tweets
+    if (!$mintweets) {
+        echo $fallback;
+    } else { ?>
 		<ul>
             <?php foreach ($tweets as $tweet) : ?>
 			<li class="tweet">
@@ -50,5 +50,5 @@
 			</li>
             <?php endforeach; ?>
 		</ul>
-        <?php endif ?>
+        <?php } ?>
 </div>
