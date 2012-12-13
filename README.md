@@ -61,7 +61,7 @@ Tested with Joomla! 1.5
 
 ---
 # Warranties, Culpability, Free Stuff
-Just see http://24.media.tumblr.com/tumblr_me7k9knNtH1rlerpuo1_500.gif
+![You didn't see anything](http://24.media.tumblr.com/tumblr_me7k9knNtH1rlerpuo1_500.gif)
 
 
 
