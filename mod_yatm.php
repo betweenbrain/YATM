@@ -18,6 +18,8 @@ $doc = JFactory::getDocument();
 $yolanda = new modYatmHelper($params);
 // Fetch the Tweets
 $tweets = $yolanda->fetchTweets();
+// Fallback message
+$fallback = $params->get('fallback');
 // @via parameter
 $via = htmlspecialchars($params->get('via'));
 // Render output
