@@ -85,9 +85,14 @@ class modYatmHelper {
         ));
 
         $json = curl_exec($curl);
+        $data = json_decode($json, TRUE);
 
-        return $json;
+        if ($data) {
 
+            return $json;
+        }
+
+        return FALSE;
     }
 
     /**
@@ -224,8 +229,13 @@ class modYatmHelper {
             }
         } else {
             // Go back to Twitter for more results if not cache exists
-            $json   = $this->searchTwitter();
-            $tweets = $this->compileTweets($json);
+            $json = $this->searchTwitter();
+
+            if (!$json) {
+                $tweets = $this->compileTweets($json);
+            } elseif (!$json) {
+                $tweets = $this->params->get('fallback');
+            }
 
             // To check and remove old cache files
             $this->validateCache('clean');
