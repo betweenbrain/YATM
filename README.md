@@ -23,13 +23,13 @@ The raw and filtered results caches are replaced if:
 * They expire per the `Cache Age` parameter
 * Caching is disabled
 
-The backup of the filtered cache is replaced the page laod following the creation of the filtered cache is created AND if the filtered cache meets the minimum number of Tweets for display.
+The backup of the filtered cache is replaced the page load following the creation of the filtered cache is created AND if the filtered cache meets the minimum number of Tweets for display. The backup of the filtered cache never expires, it is only overwritten if a conditions are met.
 
 The filtered results cache will always be used first, unless:
 * It expires and the raw results cache exists, in which cache the raw results cache is read and filtered for disply and caching.
 * Neither the raw and filtered results caches exist, in whic cache the backup of the filtered cache is used.
 
-The backup of the filtered cache never expires, it is only overwritten if a conditions are met.
+
 
 
 
