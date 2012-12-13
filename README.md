@@ -56,6 +56,10 @@ The default JavaScript used by this module is jQuery Carousel from http://www.th
 If the `Load CSS` parameter is set to *yes*, you can easily override the default CSS by creating the stylesheet `/templates/yourtemplate/css/mod_yatm/yatm.css`. Otherwise, if it is set to *no*, you can add styles directly to your template's stylesheets.
 
 ---
+# Status
+Let's just call it Alpha for now. It works, but may change drastically at a moment's notice.
+
+---
 # Compatibility
 Tested with Joomla! 1.5
 
