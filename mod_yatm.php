@@ -20,13 +20,15 @@ $yolanda = new modYatmHelper($params);
 $tweets = $yolanda->fetchTweets();
 // Fallback message
 $fallback = $params->get('fallback');
+// Minimum Tweets
+$mintweets = isset($tweets[$params->get('mintweets', 4)]);
 // @via parameter
 $via = htmlspecialchars($params->get('via'));
 // Render output
 require JModuleHelper::getLayoutPath('mod_yatm');
 
 // Load JS
-if ($params->get('loadjs')) {
+if ($params->get('loadjs') && $mintweets) {
     $doc->addScript('http://platform.twitter.com/widgets.js');
     if ($params->get('loadjquery')) {
         $doc->addScript('http://code.jquery.com/jquery.min.js');
