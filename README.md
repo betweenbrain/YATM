@@ -39,7 +39,7 @@ The default JavaScript used by this module is jQuery Carousel from http://www.th
 
 ---
 # Overrides
-You can easily override the default CSS by creating a stylesheet at /templates/yourtemplate/css/mod_yatm/yatm.css
+If the `Load CSS` parameter is set to *yes*, you can easily override the default CSS by creating the stylesheet `/templates/yourtemplate/css/mod_yatm/yatm.css`. Otherwise, if it is set to *no*, you can add styles directly to your template's stylesheets.
 
 ---
 # Compatability
