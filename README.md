@@ -17,7 +17,7 @@ Yet Another Twitter Module (YATM) is unlike any other Joomla! Twitter module. It
 
 ## Advanced Parameters
 ### Caching
-Caching is a complicated beast with YATM. If caching is enabled, the first time the module is loaded (page load), the raw results are filtered and displayed to the visitor. Then, a cache of the raw results are cached to a file. During the second page load, the raw results cache is used for filtering and display (not the live results) and a cache of the filtered results is created. Then, when the page is loaded a third time, the cache of filtered results is checked to see if it meets the minimun number of Tweets fordiaplay, and if it does, a backup cache of the filtered cache is created.
+Caching is a complicated beast with YATM. If caching is enabled, the first time the module is loaded (page load), the raw results are filtered and displayed to the visitor. Then, a cache of the raw results are cached to a file. During the second page load, the raw results cache is used for filtering and display (not the live results) and a cache of the filtered results is created. Then, when the page is loaded a third time, the cache of filtered results is used for display and then checked to see if it meets the minimun number of Tweets for diaplay, and if it does, a backup cache of the filtered cache is created.
 
 The raw and filtered results caches are replaced if:
 * They expire per the `Cache Age` parameter
