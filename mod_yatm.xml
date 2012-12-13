@@ -77,8 +77,8 @@
 		<param name="cachetime"
 		       type="text"
 		       default="15"
-		       label="Cache Time"
-		       description="The time before the module cache expires."/>
+		       label="Cache Age"
+		       description="The maximum age before the module cache expires."/>
 		<param name="moduleclass_sfx"
 		       type="text"
 		       default=""
@@ -160,8 +160,8 @@
 		<param name="tweetwidth"
 		       type="text"
 		       default="200px"
-		       label="Tweet Width"
-		       description="Width of each Tweet element."
+		       label="Item Width"
+		       description="Width of each item to be displayed."
 		       size="15"/>
 		<param name="buttondistance"
 		       type="text"
