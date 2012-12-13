@@ -286,7 +286,7 @@ class modYatmHelper {
                     return FALSE;
                 }
                 // Cache is good, let's back it up
-                $this->validateCacheMin($type);
+                $this->validateMinTweets($type);
 
                 // Yep, it's good, really it is
                 return TRUE;
@@ -298,15 +298,15 @@ class modYatmHelper {
 
     }
 
-    function validateCacheMin($type) {
+    function validateMinTweets($type) {
         $cache    = JPATH_CACHE . '/mod_yatm/' . $type . '_tweets.json';
         $altcache = JPATH_CACHE . '/mod_yatm/' . $type . '_bak_tweets.json';
 
         // Retrieve number of required good Tweets for filtered cache
-        $cachemin = $this->params->get('cachemin', 4);
+        $mintweets = $this->params->get('mintweets', 4);
         // Check for suffecient good Tweets to caching
         $tweet = json_decode(file_get_contents($cache), TRUE);
-        if (isset($tweet[$cachemin])) {
+        if (isset($tweet[$mintweets])) {
             copy($cache, $altcache);
 
             return TRUE;
