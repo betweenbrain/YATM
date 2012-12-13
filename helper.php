@@ -207,41 +207,40 @@ class modYatmHelper {
      * @since  0.2
      */
     function fetchTweets() {
+        // If cache is enabled, and there is clean cache, use it.
         if ($this->params->get('cache') && $this->validateCache('clean')) {
             $json   = file_get_contents(JPATH_CACHE . '/mod_yatm/clean_tweets.json');
             $tweets = json_decode($json, TRUE);
+            // If cache is enabled, and there is raw cache, use that instead.
         } elseif ($this->params->get('cache') && $this->validateCache('raw')) {
             $json   = file_get_contents(JPATH_CACHE . '/mod_yatm/raw_tweets.json');
             $tweets = $this->compileTweets($json);
             $this->compileCache(json_encode($tweets), 'clean');
-            // If cache is enabled, but there is no raw cache
-        } elseif ($this->params->get('cache') && !$this->validateCache('raw')) {
-            // Search Twitter
+            // Otherwise, the fun begins.
+        } else {
+            // First, search Twitter.
             $json = $this->searchTwitter();
-            // If we have results
+            // If we have results from Twitter:
             if ($json) {
+                // Use them, and...
                 $tweets = $this->compileTweets($json);
-                $this->compileCache($json);
-                // If there are no Twitter results, but the backup cache exists
+                // Compile raw cache if caching is enabled
+                if ($this->params->get('cache')) {
+                    $this->compileCache($json);
+                }
+                // Remove old cache files if caching is disabled
+                if (!$this->params->get('cache')) {
+                    $this->validateCache('clean');
+                    $this->validateCache('raw');
+                }
+                // If there are no results from Twitter, try the backup cache.
             } elseif (file_exists(JPATH_CACHE . '/mod_yatm/clean_bak_tweets.json')) {
                 $json   = file_get_contents(JPATH_CACHE . '/mod_yatm/clean_bak_tweets.json');
                 $tweets = json_decode($json, TRUE);
+            } else {
+                // Otherwise, we failed (but can still use the fallback message!)
+                return FALSE;
             }
-        } else {
-            // Go back to Twitter for more results if not cache exists
-            $json = $this->searchTwitter();
-
-            if (!$json) {
-                $tweets = $this->compileTweets($json);
-            } elseif (!$json) {
-                $tweets = $this->params->get('fallback');
-            }
-
-            // To check and remove old cache files
-            $this->validateCache('clean');
-            $this->validateCache('clean_bak');
-            $this->validateCache('raw');
-
         }
 
         return $tweets;
@@ -286,10 +285,10 @@ class modYatmHelper {
                     // Return false as cache isn't valid
                     return FALSE;
                 }
-                // Cache is good, let's do some more
+                // Cache is good, let's back it up
                 $this->validateCacheMin($type);
 
-                // Yep, it's good
+                // Yep, it's good, really it is
                 return TRUE;
             }
             // Remove any old cache if caching is truned off
