@@ -8,11 +8,12 @@
  */
 ?>
 <div class="yatm<?php echo $params->get('moduleclass_sfx'); ?>">
-    <?php if ($showterm) : ?>
+    <?php if ($showterm) { ?>
 	<h3>
-		<a <?php if ($anchorclass) echo 'class="' . $anchorclass . '"'; ?> href="http://search.twitter.com/search?q=<?php echo $term ?>"><?php echo $term ?></a>
+		<a <?php if ($anchorclass) {echo 'class="' . $anchorclass . '"';} ?> href="http://search.twitter.com/search?q=<?php echo $term ?>">#<?php echo $term ?></a>
 	</h3>
-    <?php endif;
+    <?php
+    }
     // Check for minimum Tweets
     if (!$mintweets) {
         echo $fallback;
