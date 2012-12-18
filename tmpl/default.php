@@ -10,7 +10,7 @@
 <div class="yatm<?php echo $params->get('moduleclass_sfx'); ?>">
     <?php if ($showterm) : ?>
 	<h3>
-		<a class="<?php echo $anchorclass ?>" href="http://search.twitter.com/search?q=<?php echo htmlspecialchars($this->params->get('term')); ?>"><?php echo htmlspecialchars($this->params->get('term')); ?></a>
+		<a <?php if ($anchorclass) echo 'class="' . $anchorclass . '"'; ?> href="http://search.twitter.com/search?q=<?php echo $term ?>"><?php echo $term ?></a>
 	</h3>
     <?php endif;
     // Check for minimum Tweets
