@@ -18,6 +18,8 @@ $app = JFactory::getApplication();
 $doc = JFactory::getDocument();
 // Instantiate our class
 $yolanda = new modYatmHelper($params);
+// Yolanda, please fetch the Tweets
+$tweets = $yolanda->fetchTweets();
 // The fallback message
 $fallback = $params->get('fallback');
 // Minimum Tweets
@@ -26,9 +28,6 @@ $mintweets = isset($tweets[$params->get('mintweets', 4)]);
 $showterm = $params->get('showterm');
 // Twitter search term
 $term = htmlspecialchars($params->get('term'));
-// Yolanda, please fetch the Tweets
-$tweets = $yolanda->fetchTweets();
-// Fallback message
 // @via parameter
 $via = htmlspecialchars($params->get('via'));
 // Render output
