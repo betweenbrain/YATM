@@ -10,18 +10,25 @@
 
 // Get the brains of this opration
 require_once(dirname(__FILE__) . DS . 'helper.php');
+// Global anchor class
+$anchorclass = htmlspecialchars($params->get('anchorclass'));
 // Application object
 $app = JFactory::getApplication();
 // Global document object
 $doc = JFactory::getDocument();
 // Instantiate our class
 $yolanda = new modYatmHelper($params);
-// Fetch the Tweets
-$tweets = $yolanda->fetchTweets();
-// Fallback message
+// The fallback message
 $fallback = $params->get('fallback');
 // Minimum Tweets
 $mintweets = isset($tweets[$params->get('mintweets', 4)]);
+// Show the search term?
+$showterm = $params->get('showterm');
+// Twitter search term
+$term = htmlspecialchars($params->get('term'));
+// Yolanda, please fetch the Tweets
+$tweets = $yolanda->fetchTweets();
+// Fallback message
 // @via parameter
 $via = htmlspecialchars($params->get('via'));
 // Render output
