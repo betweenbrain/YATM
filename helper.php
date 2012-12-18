@@ -134,11 +134,13 @@ class modYatmHelper {
      */
     protected function linkEntities($result) {
 
+        $anchorclass = htmlspecialchars($this->params->get('anchorclass'));
+
         // Link hashtags
         foreach ($result->entities->hashtags as $hashtag) {
             $url          = 'http://search.twitter.com/search?q=';
             $obj          = $hashtag->text;
-            $replacement  = '<a href="' . $url . $obj . '" >#' . $obj . '</a>';
+            $replacement  = '<a class="' . $anchorclass . '" href="' . $url . $obj . '" >#' . $obj . '</a>';
             $result->text = preg_replace("|#$obj|i", $replacement, $result->text);
         }
 
@@ -146,7 +148,7 @@ class modYatmHelper {
         foreach ($result->entities->user_mentions as $mention) {
             $url          = 'http://twitter.com/';
             $obj          = $mention->screen_name;
-            $replacement  = '<a href="' . $url . $obj . '" >@' . $obj . '</a>';
+            $replacement  = '<a class="' . $anchorclass . '" href="' . $url . $obj . '" >@' . $obj . '</a>';
             $result->text = preg_replace("|@$obj|i", $replacement, $result->text);
         }
 
@@ -154,7 +156,7 @@ class modYatmHelper {
         foreach ($result->entities->urls as $urls) {
             $url          = NULL;
             $obj          = $urls->url;
-            $replacement  = '<a href="' . $url . $obj . '" >' . $urls->url . '</a>';
+            $replacement  = '<a class="' . $anchorclass . '" href="' . $url . $obj . '" >' . $urls->url . '</a>';
             $result->text = preg_replace("|$obj|i", $replacement, $result->text);
         }
 
