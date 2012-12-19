@@ -39,16 +39,16 @@
 				<a class="status<?php echo $anchorclass ?>" href="https://twitter.com/<?php echo $tweet['from_user'] . '/status/' . $tweet['id'] ?>"><?php echo substr($tweet['created_at'], 4, 7); ?></a>
 				<ul class="actions">
 					<li>
-						<a class="reply<?php echo $anchorclass ?>" href="https://twitter.com/intent/tweet?in_reply_to=<?php echo $tweet['id'] ?>">
+						<a class="reply" href="https://twitter.com/intent/tweet?in_reply_to=<?php echo $tweet['id'] ?>">
 							Reply
 						</a>
 					</li>
 					<li>
-						<a class="retweet<?php echo $anchorclass ?>" href="https://twitter.com/intent/retweet?tweet_id=<?php echo $tweet['id'] ?><?php if ($via) echo '&via=' . $via; ?>">Retweet
+						<a class="retweet" href="https://twitter.com/intent/retweet?tweet_id=<?php echo $tweet['id'] ?><?php if ($via) echo '&via=' . $via; ?>">Retweet
 						</a>
 					</li>
 					<li>
-						<a class="favorite<?php echo $anchorclass ?>" href="https://twitter.com/intent/favorite?tweet_id=<?php echo $tweet['id'] ?>">
+						<a class="favorite" href="https://twitter.com/intent/favorite?tweet_id=<?php echo $tweet['id'] ?>">
 							Favorite
 						</a>
 					</li>
