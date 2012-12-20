@@ -12,7 +12,7 @@
 <a <?php if ($anchorclass) {echo 'class="' . $anchorclass . '"';} ?> href="http://search.twitter.com/search?q=<?php echo $term ?>">#<?php echo $term ?></a>
 </h3>
 <?php endif ?>
-<div class="yatm<?php echo $params->get('moduleclass_sfx'); ?>">
+<div class="yatm">
     <?php
     // Check for minimum Tweets
     if (!$mintweets) {
