@@ -152,6 +152,14 @@
 		       label="Auto Slide Interval"
 		       description="The delay between each click using the autoSlide option."
 		       size="15"/>
+		<param name="btnsPosition"
+		       type="list"
+		       default="outside"
+		       label="Button Position"
+		       description="The position of the buttons relative to the carousel container.">
+			<option value="outside">Outside</option>
+			<option value="inside">Inside</option>
+		</param>
 		<param type="spacer"
 		       default=" "/>
 		<param type="spacer"

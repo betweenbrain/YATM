@@ -47,6 +47,7 @@ if ($params->get('loadjs') && $mintweets) {
                     loop             :' . ($params->get('loop') ? 'true' : 'false') . ',
                     autoSlide        :' . ($params->get('autoSlide') ? 'true' : 'false') . ',
                     autoSlideInterval:' . htmlspecialchars($params->get('autoSlideInterval')) . ',
+                    btnsPosition     :"' . $params->get('btnsPosition') . '",
                     nextBtn          : "<a class=\"next\" title=\"Next\">Next</a>",
                     prevBtn          : "<a class=\"prev\" title=\"Previous\">Previous</a>",
                 });
