@@ -25,6 +25,7 @@ class JElementDiagnostics extends JElement {
         $db->setQuery($sql);
         $params = $db->loadResult();
 
+        // Get
         $showdiagnostics = strpos($params, 'showdiagnostics=1');
 
         $cacheon   = strpos($params, 'cache=1');
@@ -36,6 +37,10 @@ class JElementDiagnostics extends JElement {
         $cleancache = $cachedir . 'clean_tweets.json';
         $rawcache   = $cachedir . 'raw_tweets.json';
 
+        $result   = NULL;
+        $messages = NULL;
+        $errors   = NULL;
+
         if ($showdiagnostics) {
 
             //return var_dump($params);
@@ -43,31 +48,51 @@ class JElementDiagnostics extends JElement {
             // Check cache stuff
             if ($cacheon) {
 
-                $results[] = "Cache lifetime is $cachetime minute(s).<br/>";
+                $messages[] = "Caching is enabled.";
+
+                $messages[] = "Cache lifetime is $cachetime minute(s).<br/>";
 
                 if (is_dir($cachedir)) {
-                    $results[] = "Cache dirtectory exists at $cachedir";
+                    $messages[] = "Cache dirtectory exists at $cachedir";
+                } else {
+                    $errors[] = "The cache diretory at $cachedir does not exist!";
                 }
 
                 if (file_exists($bakcache)) {
-                    $results[] = "Backup cache file exists at $bakcache";
+                    $messages[] = "Backup cache file exists at $bakcache";
+                } else {
+                    $errors[] = "The backup cache file at $bakcache does not exist!";
                 }
 
                 if (file_exists($cleancache)) {
-                    $results[] = "Clean cache file exists at $cleancache";
+                    $messages[] = "Clean cache file exists at $cleancache";
+                } else {
+                    $errors[] = "The clean cache file at $cleancache does not exist!";
                 }
 
                 if (file_exists($rawcache)) {
-                    $results[] = "Raw cache file exists at $rawcache";
+                    $messages[] = "Raw cache file exists at $rawcache";
+                } else {
+                    $errors[] = "The raw cache file at $rawcache does not exist!";
                 }
 
-                $message = '<dl id="system-message"><dt>Diagnostic Information</dt><dd class="message fade"><ul>';
-                foreach ($results as $result) {
-                    $message .= '<li>' . $result . '</li>';
+                if ($messages[0]) {
+                    $result .= '<dl id="system-message"><dt>Information</dt><dd class="message fade"><ul>';
+                    foreach ($messages as $message) {
+                        $result .= '<li>' . $message . '</li>';
+                    }
+                    $result .= '</ul></dd></dl>';
                 }
-                $message .= '</ul></dd></dl>';
 
-                return print_r($message, FALSE);
+                if ($errors[0]) {
+                    $result .= '<dl id="system-message"><dt>Errors</dt><dd class="error message fade"><ul>';
+                    foreach ($errors as $error) {
+                        $result .= '<li>' . $error . '</li>';
+                    }
+                    $result .= '</ul></dd></dl>';
+                }
+
+                return print_r($result, FALSE);
 
             }
         }
