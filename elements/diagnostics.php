@@ -25,25 +25,24 @@ class JElementDiagnostics extends JElement {
         $db->setQuery($sql);
         $params = $db->loadResult();
 
-        // Get
+        // Params are stored as a string, so we need to match condition with strpos.
         $showdiagnostics = strpos($params, 'showdiagnostics=1');
+        $cacheon         = strpos($params, 'cache=1');
 
-        $cacheon   = strpos($params, 'cache=1');
-        $cachetime = preg_match("/cachetime=[(0-9)*]/", $params);
-
+        // JPATH_CACHE is relative to where it is being called from, as we want the site cache, /administrator is removed.
         $cachedir   = JPATH_CACHE . '/mod_yatm/';
         $cachedir   = preg_replace("/administrator\//", '', $cachedir);
+        $cachetime  = preg_match("/cachetime=[(0-9)*]/", $params);
         $bakcache   = $cachedir . 'clean_bak_tweets.json';
         $cleancache = $cachedir . 'clean_tweets.json';
         $rawcache   = $cachedir . 'raw_tweets.json';
 
+        // Initialize variables
         $result   = NULL;
         $messages = NULL;
         $errors   = NULL;
 
         if ($showdiagnostics) {
-
-            //return var_dump($params);
 
             // Check cache stuff
             if ($cacheon) {
