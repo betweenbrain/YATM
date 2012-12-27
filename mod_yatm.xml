@@ -15,9 +15,11 @@
 		<filename module="mod_yatm">mod_yatm.php</filename>
 		<filename>index.html</filename>
 		<filename>helper.php</filename>
+		<folder>elements</folder>
 		<folder>tmpl</folder>
 	</files>
-	<params>
+	<params addpath="/modules/mod_yatm/elements">
+		<param type="diagnostics"/>
 		<param name="term"
 		       type="text"
 		       default=""
@@ -104,6 +106,14 @@
 		       description="The message to be displayed if no Tweets are returned or cached."
 		       rows="5"
 		       cols="50"/>
+		<param name="showdiagnostics"
+		       type="list"
+		       default="0"
+		       label="Show Diagnostics"
+		       description="If yes, diagnostoc informstion will be displayed in the Module Edit screen.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
 	</params>
 	<params group="other">
 		<param type="spacer"
