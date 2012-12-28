@@ -12,7 +12,7 @@ if (!$mintweets) {
     echo $fallback;
 } else {
     if ($showterm) : ?>
-    <h3>
+    <h3 class="yatm">
         <a<?php if ($anchorclass) {
             echo ' class="' . $anchorclass . '"';
         } ?> href="http://search.twitter.com/search?q=<?php echo $term ?>">#<?php echo $term ?></a>
