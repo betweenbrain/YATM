@@ -32,10 +32,12 @@ $term = htmlspecialchars($params->get('term'));
 $via = htmlspecialchars($params->get('via'));
 // Render output
 require JModuleHelper::getLayoutPath('mod_yatm');
-
 // Load JS
-if ($params->get('loadjs') && $mintweets) {
+if ($mintweets) {
     $doc->addScript('http://platform.twitter.com/widgets.js');
+}
+
+if ($params->get('loadjs') && $mintweets) {
     if ($params->get('loadjquery')) {
         $doc->addScript('http://code.jquery.com/jquery.min.js');
     }
