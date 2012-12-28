@@ -21,7 +21,8 @@ class JElementDiagnostics extends JElement {
         $db  = JFactory::getDBO();
         $sql = "SELECT params
         FROM #__modules
-        WHERE module = \"mod_yatm\"";
+        WHERE module = \"mod_yatm\"
+        AND published = 1";
         $db->setQuery($sql);
         $params = $db->loadResult();
 
@@ -45,6 +46,10 @@ class JElementDiagnostics extends JElement {
         if ($showdiagnostics) {
 
             // Check cache stuff
+            if (!$cacheon) {
+                $messages[] = "Caching is disabled.";
+            }
+
             if ($cacheon) {
 
                 $messages[] = "Caching is enabled.";
@@ -74,26 +79,31 @@ class JElementDiagnostics extends JElement {
                 } else {
                     $errors[] = "The raw cache file at $rawcache does not exist!";
                 }
-
-                if ($messages[0]) {
-                    $result .= '<dl id="system-message"><dt>Information</dt><dd class="message fade"><ul>';
-                    foreach ($messages as $message) {
-                        $result .= '<li>' . $message . '</li>';
-                    }
-                    $result .= '</ul></dd></dl>';
-                }
-
-                if ($errors[0]) {
-                    $result .= '<dl id="system-message"><dt>Errors</dt><dd class="error message fade"><ul>';
-                    foreach ($errors as $error) {
-                        $result .= '<li>' . $error . '</li>';
-                    }
-                    $result .= '</ul></dd></dl>';
-                }
-
-                return print_r($result, FALSE);
-
             }
+
+            if ($messages[0]) {
+                $result .= '<dl id="system-message"><dt>Information</dt><dd class="message fade"><ul>';
+                foreach ($messages as $message) {
+                    $result .= '<li>' . $message . '</li>';
+                }
+                $result .= '</ul></dd></dl>';
+            }
+
+            if ($errors[0]) {
+                $result .= '<dl id="system-message"><dt>Errors</dt><dd class="error message fade"><ul>';
+                foreach ($errors as $error) {
+                    $result .= '<li>' . $error . '</li>';
+                }
+                $result .= '</ul></dd></dl>';
+            }
+
+            if ($result) {
+                return print_r($result, FALSE);
+            }
+
+            return FALSE;
+
         }
     }
+
 }
