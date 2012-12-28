@@ -7,19 +7,20 @@
  * License    GNU GPL v3 or later
  */
 ?>
+<?php if ($mintweets && $showterm) : ?>
+<h3>
+    <a <?php if ($anchorclass) {
+        echo 'class="' . $anchorclass . '"';
+    } ?> href="http://search.twitter.com/search?q=<?php echo $term ?>">#<?php echo $term ?></a>
+</h3>
+<?php endif ?>
 <div class="yatm">
     <?php
     // Check for minimum Tweets
     if (!$mintweets) {
         echo $fallback;
     } else {
-        if ($showterm) : ?>
-            <h3>
-                <a <?php if ($anchorclass) {
-                    echo 'class="' . $anchorclass . '"';
-                } ?> href="http://search.twitter.com/search?q=<?php echo $term ?>">#<?php echo $term ?></a>
-            </h3>
-        <?php endif ?>
+        ?>
         <ul>
             <?php foreach ($tweets as $tweet) : ?>
             <li class="tweet">
