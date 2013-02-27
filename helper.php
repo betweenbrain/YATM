@@ -19,6 +19,14 @@ class modYatmHelper {
 	protected $params;
 
 	/**
+	 * Flag to determine whether /libraries/guggenheim/cachedrequest.php exists or not
+	 *
+	 * @var    boolean
+	 * @since  1.2
+	 */
+	protected $cachedRequest = FALSE;
+
+	/**
 	 * Flag to determine whether data is cached or to load fresh
 	 *
 	 * @var    boolean
@@ -52,6 +60,9 @@ class modYatmHelper {
 	public function __construct($params) {
 		// Store the module params
 		$this->params = $params;
+		if (file_exists(JPATH_ROOT . '/libraries/guggenheim/cachedrequest.php')) {
+			$this->cachedRequest = TRUE;
+		}
 	}
 
 	/**
@@ -74,26 +85,29 @@ class modYatmHelper {
 		$url .= '&include_entities=1';
 		$url .= '&rpp=' . $rpp;
 
-		$curl = curl_init();
+		if ($this->cachedRequest) {
+			jimport('guggenheim.cachedrequest');
+			$cachedRequest = new CachedRequest();
+			$json          = $cachedRequest->get($url);
+		} else {
 
-		curl_setopt_array($curl, Array(
-			CURLOPT_USERAGENT      => "YetAnotherTwitterModule",
-			CURLOPT_URL            => $url,
-			CURLOPT_TIMEOUT        => 300,
-			CURLOPT_CONNECTTIMEOUT => 60,
-			CURLOPT_RETURNTRANSFER => TRUE,
-			CURLOPT_SSL_VERIFYHOST => FALSE,
-			CURLOPT_SSL_VERIFYPEER => FALSE,
-			CURLOPT_ENCODING       => 'UTF-8'
-		));
+			$curl = curl_init();
 
-		$json = curl_exec($curl);
-		$data = json_decode($json, TRUE);
+			curl_setopt_array($curl, Array(
+				CURLOPT_USERAGENT      => "YetAnotherTwitterModule",
+				CURLOPT_URL            => $url,
+				CURLOPT_TIMEOUT        => 300,
+				CURLOPT_CONNECTTIMEOUT => 60,
+				CURLOPT_RETURNTRANSFER => TRUE,
+				CURLOPT_SSL_VERIFYHOST => FALSE,
+				CURLOPT_SSL_VERIFYPEER => FALSE,
+				CURLOPT_ENCODING       => 'UTF-8'
+			));
 
-		if ($data) {
-
-			return $json;
+			$json = curl_exec($curl);
 		}
+
+		return $json;
 
 		return FALSE;
 	}
@@ -106,8 +120,11 @@ class modYatmHelper {
 	 * @since  0.2
 	 */
 	function compileTweets($json) {
-		// Decode json input
-		$tweets = json_decode($json);
+		if ($this->cachedRequest) {
+			$tweets = json_decode(trim($json, '"'));
+		} else {
+			$tweets = json_decode($json);
+		}
 		// Proceed only if there are Tweets in the json
 		if ($tweets) {
 			// Process Tweets
@@ -213,39 +230,44 @@ class modYatmHelper {
 	 * @since  0.2
 	 */
 	function fetchTweets() {
-		// If cache is enabled, and there is clean cache, use it.
-		if ($this->params->get('cache') && $this->validateCache('clean')) {
-			$json   = file_get_contents(JPATH_CACHE . '/mod_yatm/clean_tweets.json');
-			$tweets = json_decode($json, TRUE);
-			// If cache is enabled, and there is raw cache, use that instead.
-		} elseif ($this->params->get('cache') && $this->validateCache('raw')) {
-			$json   = file_get_contents(JPATH_CACHE . '/mod_yatm/raw_tweets.json');
+		if ($this->cachedRequest) {
+			$json   = $this->searchTwitter();
 			$tweets = $this->compileTweets($json);
-			$this->compileCache(json_encode($tweets), 'clean');
-			// Otherwise, the fun begins.
 		} else {
-			// First, search Twitter.
-			$json = $this->searchTwitter();
-			// If we have results from Twitter:
-			if ($json) {
-				// Use them, and...
-				$tweets = $this->compileTweets($json);
-				// Compile raw cache if caching is enabled
-				if ($this->params->get('cache')) {
-					$this->compileCache($json);
-				}
-				// Remove old cache files if caching is disabled
-				if (!$this->params->get('cache')) {
-					$this->validateCache('clean');
-					$this->validateCache('raw');
-				}
-				// If there are no results from Twitter, try the backup cache.
-			} elseif (file_exists(JPATH_CACHE . '/mod_yatm/clean_bak_tweets.json')) {
-				$json   = file_get_contents(JPATH_CACHE . '/mod_yatm/clean_bak_tweets.json');
+			// If cache is enabled, and there is clean cache, use it.
+			if ($this->params->get('cache') && $this->validateCache('clean')) {
+				$json   = file_get_contents(JPATH_CACHE . '/mod_yatm/clean_tweets.json');
 				$tweets = json_decode($json, TRUE);
+				// If cache is enabled, and there is raw cache, use that instead.
+			} elseif ($this->params->get('cache') && $this->validateCache('raw')) {
+				$json   = file_get_contents(JPATH_CACHE . '/mod_yatm/raw_tweets.json');
+				$tweets = $this->compileTweets($json);
+				$this->compileCache(json_encode($tweets), 'clean');
+				// Otherwise, the fun begins.
 			} else {
-				// Otherwise, we failed (but can still use the fallback message!)
-				return FALSE;
+				// First, search Twitter.
+				$json = $this->searchTwitter();
+				// If we have results from Twitter:
+				if ($json) {
+					// Use them, and...
+					$tweets = $this->compileTweets($json);
+					// Compile raw cache if caching is enabled
+					if ($this->params->get('cache')) {
+						$this->compileCache($json);
+					}
+					// Remove old cache files if caching is disabled
+					if (!$this->params->get('cache')) {
+						$this->validateCache('clean');
+						$this->validateCache('raw');
+					}
+					// If there are no results from Twitter, try the backup cache.
+				} elseif (file_exists(JPATH_CACHE . '/mod_yatm/clean_bak_tweets.json')) {
+					$json   = file_get_contents(JPATH_CACHE . '/mod_yatm/clean_bak_tweets.json');
+					$tweets = json_decode($json, TRUE);
+				} else {
+					// Otherwise, we failed (but can still use the fallback message!)
+					return FALSE;
+				}
 			}
 		}
 
