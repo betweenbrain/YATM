@@ -24,7 +24,7 @@ class modYatmHelper {
 	 * @var    boolean
 	 * @since  1.2
 	 */
-	protected $cachedRequest = FALSE;
+	protected $isCachedRequest = FALSE;
 
 	/**
 	 * Flag to determine whether data is cached or to load fresh
@@ -60,8 +60,12 @@ class modYatmHelper {
 	public function __construct($params) {
 		// Store the module params
 		$this->params = $params;
-		if (file_exists(JPATH_ROOT . '/libraries/guggenheim/cachedrequest.php')) {
-			$this->cachedRequest = TRUE;
+		if (JComponentHelper::isEnabled('com_cachedrequest')) {
+			JLoader::register("CachedRequest", JPATH_ADMINISTRATOR . '/components/com_cachedrequest/cachedrequesthandler.php');
+			if (class_exists('CachedRequest')) {
+				$this->isCachedRequest = TRUE;
+				echo('isCachedRequest');
+			}
 		}
 	}
 
@@ -72,11 +76,11 @@ class modYatmHelper {
 	 * @since  0.2
 	 */
 	function searchTwitter() {
-
 		// Get parameters from the module's configuration
-		$term = htmlspecialchars($this->params->get('term'));
-		$type = $this->params->get('type');
-		$rpp  = htmlspecialchars($this->params->get('rpp'));
+		$term        = htmlspecialchars($this->params->get('term'));
+		$type        = $this->params->get('type');
+		$rpp         = htmlspecialchars($this->params->get('rpp'));
+		$cachemaxage = $this->params->get('cachemaxage', 15) * 60;
 
 		// Build the search URL
 		$url = 'http://search.twitter.com/search.json?q=';
@@ -85,10 +89,11 @@ class modYatmHelper {
 		$url .= '&include_entities=1';
 		$url .= '&rpp=' . $rpp;
 
-		if ($this->cachedRequest) {
-			jimport('guggenheim.cachedrequest');
+		if ($this->isCachedRequest) {
 			$cachedRequest = new CachedRequest();
-			$json          = $cachedRequest->get($url);
+			$cachedRequest->cacheAge($cachemaxage);
+			$json = $cachedRequest->get($url);
+			$json = trim($json, '"');
 		} else {
 
 			$curl = curl_init();
@@ -107,7 +112,10 @@ class modYatmHelper {
 			$json = curl_exec($curl);
 		}
 
-		return $json;
+		if (json_decode($json, TRUE)) {
+
+			return $json;
+		}
 
 		return FALSE;
 	}
@@ -120,11 +128,8 @@ class modYatmHelper {
 	 * @since  0.2
 	 */
 	function compileTweets($json) {
-		if ($this->cachedRequest) {
-			$tweets = json_decode(trim($json, '"'));
-		} else {
-			$tweets = json_decode($json);
-		}
+		// Decode json input
+		$tweets = json_decode($json);
 		// Proceed only if there are Tweets in the json
 		if ($tweets) {
 			// Process Tweets
@@ -152,8 +157,8 @@ class modYatmHelper {
 	 * @return array
 	 * @since  0.2
 	 */
-	protected function linkEntities($result) {
 
+	protected function linkEntities($result) {
 		$anchorclass = htmlspecialchars($this->params->get('anchorclass'));
 
 		// Link hashtags
@@ -190,6 +195,7 @@ class modYatmHelper {
 	 * @return var
 	 * @since  0.2
 	 */
+
 	protected function filterTweet($result) {
 		// Clear the bad flag
 		$bannedflag = NULL;
@@ -230,7 +236,7 @@ class modYatmHelper {
 	 * @since  0.2
 	 */
 	function fetchTweets() {
-		if ($this->cachedRequest) {
+		if ($this->isCachedRequest) {
 			$json   = $this->searchTwitter();
 			$tweets = $this->compileTweets($json);
 		} else {
@@ -279,6 +285,7 @@ class modYatmHelper {
 	 *
 	 * @since  0.2
 	 */
+
 	protected function compileCache($json, $type = "raw") {
 		$cache = JPATH_CACHE . '/mod_yatm/' . $type . '_tweets.json';
 		// Don't compile cache if json has no data
@@ -303,11 +310,11 @@ class modYatmHelper {
 			// Check if file exists
 			if (file_exists($cache)) {
 				// Convert user input max cache age to minutes
-				$cacheTime = ($this->params->get('cachetime', 15)) * 60;
+				$cachemaxage = ($this->params->get('cachemaxage', 15)) * 60;
 				// Get age of cache file
 				$cacheAge = filemtime($cache);
 				// Check if cache has expired
-				if ((time() - $cacheAge) >= $cacheTime) {
+				if ((time() - $cacheAge) >= $cachemaxage) {
 					// If it's stale, delete it an set flag
 					unlink($cache);
 
