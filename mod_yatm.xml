@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<install type="module"
-         version="2.5"
-         method="upgrade">
+<install type="module" version="2.5" method="upgrade">
 	<name>YATM</name>
 	<creationDate>December 28, 2012</creationDate>
 	<author>Matt Thomas</author>
