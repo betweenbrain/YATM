@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <install type="module" version="2.5" method="upgrade">
 	<name>YATM</name>
-	<creationDate>December 28, 2012</creationDate>
+	<creationDate>February 28, 2012</creationDate>
 	<author>Matt Thomas</author>
 	<authorUrl>http://betweenbrain.com</authorUrl>
 	<copyright>Copyright (C) 2009 - 2012 Matt Thomas. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-	<version>1.5.2</version>
+	<version>1.5.3</version>
 	<description>Yet Another Twitter Module!</description>
 	<files>
 		<filename>mod_yatm.xml</filename>
