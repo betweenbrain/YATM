@@ -81,7 +81,7 @@ class modYatmHelper {
 		$term        = htmlspecialchars($this->params->get('term'));
 		$type        = $this->params->get('type');
 		$rpp         = htmlspecialchars($this->params->get('rpp'));
-		$cachemaxage = ($this->params->get('cachemaxage', 15)) * 60;
+		$cachemaxage = $this->params->get('cachemaxage', 15) * 60;
 
 		// Build the search URL
 		$url = 'http://search.twitter.com/search.json?q=';
