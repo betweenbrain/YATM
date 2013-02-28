@@ -82,7 +82,7 @@
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</param>
-		<param name="cachetime"
+		<param name="cachemaxage"
 		       type="text"
 		       default="15"
 		       label="Cache Age"
