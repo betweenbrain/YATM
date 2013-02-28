@@ -64,7 +64,6 @@ class modYatmHelper {
 			JLoader::register("CachedRequest", JPATH_ADMINISTRATOR . '/components/com_cachedrequest/cachedrequesthandler.php');
 			if (class_exists('CachedRequest')) {
 				$this->isCachedRequest = TRUE;
-				echo('isCachedRequest');
 			}
 		}
 	}
