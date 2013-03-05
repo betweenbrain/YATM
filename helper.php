@@ -76,14 +76,20 @@ class modYatmHelper {
 	 */
 	function searchTwitter() {
 		// Get parameters from the module's configuration
-		$term        = htmlspecialchars($this->params->get('term'));
-		$type        = $this->params->get('type');
-		$rpp         = htmlspecialchars($this->params->get('rpp'));
-		$cachemaxage = $this->params->get('cachemaxage', 15) * 60;
+		$term              = htmlspecialchars($this->params->get('term'));
+		$type              = $this->params->get('type');
+		$rpp               = htmlspecialchars($this->params->get('rpp'));
+		$cachemaxage       = $this->params->get('cachemaxage', 15) * 60;
+		$consumerKey       = htmlspecialchars($this->params->get('consumerKey'));
+		$consumerSecret    = htmlspecialchars($this->params->get('consumerSecret'));
+		$accessToken       = htmlspecialchars($this->params->get('accessToken'));
+		$accessTokenSecret = htmlspecialchars($this->params->get('accessTokenSecret'));
 
 		// Build the search URL
 		$url = 'http://search.twitter.com/search.json?q=';
+		//$url = 'https://api.twitter.com/1.1/search/tweets.json?q=';
 		$url .= '%23' . $term;
+		// Soon to be count
 		$url .= '&result_type=' . $type;
 		$url .= '&include_entities=1';
 		$url .= '&rpp=' . $rpp;
@@ -109,6 +115,20 @@ class modYatmHelper {
 			));
 
 			$json = curl_exec($curl);
+
+			/*
+			$oAuth = new OAuth(
+			CONSUMER_KEY,
+			CONSUMER_SECRET,
+			OAUTH_SIG_METHOD_HMACSHA1,
+			OAUTH_AUTH_TYPE_URI);
+			$oAuth->setToken(ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
+			$oAuth->fetch('https://api.twitter.com/1.1/search/tweets.json', array(
+			'status' => 'This is a test'), OAUTH_HTTP_METHOD_POST);
+			var_dump($oAuth->getLastResponse());
+			*/
+
+			die('<pre>' . print_r($json, TRUE) . '</pre>');
 		}
 
 		if (json_decode($json, TRUE)) {
