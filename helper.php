@@ -101,34 +101,29 @@ class modYatmHelper {
 			$json = trim($json, '"');
 		} else {
 
-			$curl = curl_init();
+			require 'includes/tmhOAuth.php';
+			require 'includes/tmhUtilities.php';
 
-			curl_setopt_array($curl, Array(
-				CURLOPT_USERAGENT      => "YetAnotherTwitterModule",
-				CURLOPT_URL            => $url,
-				CURLOPT_TIMEOUT        => 300,
-				CURLOPT_CONNECTTIMEOUT => 60,
-				CURLOPT_RETURNTRANSFER => TRUE,
-				CURLOPT_SSL_VERIFYHOST => FALSE,
-				CURLOPT_SSL_VERIFYPEER => FALSE,
-				CURLOPT_ENCODING       => 'UTF-8'
+			$tmhOAuth = new tmhOAuth(array(
+				'consumer_key'        => $consumerKey,
+				'consumer_secret'     => $consumerSecret,
+				'user_token'          => $accessToken,
+				'user_secret'         => $accessTokenSecret,
+				'curl_ssl_verifypeer' => FALSE
+
 			));
 
-			$json = curl_exec($curl);
+			$tmhOAuth->request('GET', $tmhOAuth->url('1.1/search/tweets'), array(
+				'q'                => $term,
+				'result_type'      => $type,
+				'include_entities' => 'true',
+				'count'            => $rpp
+			));
 
-			/*
-			$oAuth = new OAuth(
-			CONSUMER_KEY,
-			CONSUMER_SECRET,
-			OAUTH_SIG_METHOD_HMACSHA1,
-			OAUTH_AUTH_TYPE_URI);
-			$oAuth->setToken(ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
-			$oAuth->fetch('https://api.twitter.com/1.1/search/tweets.json', array(
-			'status' => 'This is a test'), OAUTH_HTTP_METHOD_POST);
-			var_dump($oAuth->getLastResponse());
-			*/
+			$response = $tmhOAuth->response['response'];
+			$json   = json_encode($response);
 
-			die('<pre>' . print_r($json, TRUE) . '</pre>');
+			die('<pre>' . var_dump($json, TRUE) . '</pre>');
 		}
 
 		if (json_decode($json, TRUE)) {
