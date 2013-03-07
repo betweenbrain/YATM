@@ -74,26 +74,6 @@
 		       cols="50"/>
 	</params>
 	<params group="advanced">
-		<param name="consumerKey"
-		       type="text"
-		       default=""
-		       label="Consumer Key"
-		       description=""/>
-		<param name="consumerSecret"
-		       type="text"
-		       default=""
-		       label="Consumer Secret"
-		       description=""/>
-		<param name="accessToken"
-		       type="text"
-		       default=""
-		       label="Access Token"
-		       description=""/>
-		<param name="accessTokenSecret"
-		       type="text"
-		       default=""
-		       label="Access Token Secret"
-		       description=""/>
 		<param name="cache"
 		       type="list"
 		       default="0"
