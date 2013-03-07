@@ -34,48 +34,48 @@ $via = htmlspecialchars($params->get('via'));
 require JModuleHelper::getLayoutPath('mod_yatm');
 // Load JS
 if ($mintweets) {
-    $doc->addScript('http://platform.twitter.com/widgets.js');
+	$doc->addScript('http://platform.twitter.com/widgets.js');
 }
 
 if ($params->get('loadjs') && $mintweets) {
-    if ($params->get('loadjquery')) {
-        $doc->addScript('http://code.jquery.com/jquery.min.js');
-    }
-    $doc->addScript(JURI::base(TRUE) . '/modules/mod_yatm/tmpl/js/jquery.carousel.min.js');
-    $js = '(function ($) {
-            $().ready(function () {
-                $("div.yatm").carousel({
-                    dispItems        :' . htmlspecialchars($params->get('dispItems')) . ',
-                    loop             :' . ($params->get('loop') ? 'true' : 'false') . ',
-                    autoSlide        :' . ($params->get('autoSlide') ? 'true' : 'false') . ',
-                    autoSlideInterval:' . htmlspecialchars($params->get('autoSlideInterval')) . ',
-                    btnsPosition     :"' . $params->get('btnsPosition') . '",
-                    nextBtn          : "<a class=\"next\" title=\"Next\">Next</a>",
-                    prevBtn          : "<a class=\"prev\" title=\"Previous\">Previous</a>",
-                });
-            });
-        })(jQuery)';
-    // Nicefy JS
-    $js = preg_replace(array('/\s{2,}+/', '/\t/', '/\n/'), '', $js);
-    $doc->addScriptDeclaration($js);
+	if ($params->get('loadjquery')) {
+		$doc->addScript('http://code.jquery.com/jquery.min.js');
+	}
+	$doc->addScript(JURI::base(TRUE) . '/modules/mod_yatm/tmpl/js/jquery.carousel.min.js');
+	$js = '(function ($) {
+		 $().ready(function () {
+			 $("div.yatm").carousel({
+				 dispItems		   :' . htmlspecialchars($params->get('dispItems')) . ',
+				 loop			   :' . ($params->get('loop') ? 'true' : 'false') . ',
+				 autoSlide		   :' . ($params->get('autoSlide') ? 'true' : 'false') . ',
+				 autoSlideInterval :' . htmlspecialchars($params->get('autoSlideInterval')) . ',
+				 btnsPosition	   :"' . $params->get('btnsPosition') . '",
+				 nextBtn		   : \'<a class="next" title="Next">Next</a>\',
+				 prevBtn		   : \'<a class="prev" title="Previous">Previous</a>\'
+			 });
+		 });
+	 })(jQuery)';
+	// Nicefy JS
+	$js = preg_replace(array('/\s{2,}+/', '/\t/', '/\n/'), '', $js);
+	$doc->addScriptDeclaration($js);
 }
 
 // Load CSS
 if ($params->get('loadcss')) {
-    // Check for template override of CSS
-    if (file_exists(JPATH_SITE . '/templates/' . $app->getTemplate() . '/css/mod_yatm/yatm.css')) {
-        $doc->addStyleSheet(JURI::base(TRUE) . '/templates/' . $app->getTemplate() . '/css/mod_yatm/yatm.css');
-    } else {
-        $doc->addStyleSheet(JURI::base(TRUE) . '/modules/mod_yatm/tmpl/css/yatm.css');
-        $css = '.yatm {
-    	    width   : ' . htmlspecialchars($params->get('containerwidth')) . ';
-    	    padding : 0 ' . htmlspecialchars($params->get('buttondistance')) . ';
-        }
-        .yatm li {
-    	    width           : ' . htmlspecialchars($params->get('tweetwidth')) . ';
-        }';
-        // Nicefy CSS
-        $css = preg_replace(array('/\s{2,}+/', '/\t/', '/\n/'), '', $css);
-        $doc->addStyleDeclaration($css);
-    }
+	// Check for template override of CSS
+	if (file_exists(JPATH_SITE . '/templates/' . $app->getTemplate() . '/css/mod_yatm/yatm.css')) {
+		$doc->addStyleSheet(JURI::base(TRUE) . '/templates/' . $app->getTemplate() . '/css/mod_yatm/yatm.css');
+	} else {
+		$doc->addStyleSheet(JURI::base(TRUE) . '/modules/mod_yatm/tmpl/css/yatm.css');
+		$css = '.yatm {
+			width   : ' . htmlspecialchars($params->get('containerwidth')) . ';
+			padding : 0 ' . htmlspecialchars($params->get('buttondistance')) . ';
+		}
+		.yatm li {
+			width		   : ' . htmlspecialchars($params->get('tweetwidth')) . ';
+		}';
+		// Nicefy CSS
+		$css = preg_replace(array('/\s{2,}+/', '/\t/', '/\n/'), '', $css);
+		$doc->addStyleDeclaration($css);
+	}
 }
