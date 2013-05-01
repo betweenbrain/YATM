@@ -49,6 +49,11 @@
 		       label="Maximum Results"
 		       description="Maximum number of Tweets to display.."
 		       size="15"/>
+		<param name="itemsPerLoop"
+		       type="text"
+		       default="4"
+		       label="Items Per Loop"
+		       description="The number of items to display in a single loop or slide"/>
 		<param name="type"
 		       type="list"
 		       default="mixed"
@@ -174,7 +179,7 @@
 		       default="CSS parameters"/>
 		<param name="loadcss"
 		       type="list"
-		       default="1"
+		       default="0"
 		       label="Load CSS"
 		       description="If yes, loads basic stylesheet and the following settings. No allows you to custom define everything in your template.">
 			<option value="0">No</option>

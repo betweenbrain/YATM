@@ -352,5 +352,25 @@ class modYatmHelper {
 
 		return FALSE;
 	}
+
+	function loopStart($i) {
+		$ipl = $this->params->get('itemsPerLoop');
+
+		if (fmod($i, $ipl) == 0) {
+			return '<div class="item">';
+		}
+
+		return NULL;
+	}
+
+	function loopEnd($i, $last) {
+		$ipl = $this->params->get('itemsPerLoop');
+
+		if ((fmod($i, $ipl) == $ipl - 1) || ($i == $last)) {
+			return '</div>';
+		}
+
+		return NULL;
+	}
 }
 

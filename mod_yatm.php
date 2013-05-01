@@ -17,13 +17,15 @@ $app = JFactory::getApplication();
 // Global document object
 $doc = JFactory::getDocument();
 // Instantiate our class
-$yolanda = new modYatmHelper($params);
+$yatm = new modYatmHelper($params);
 // Yolanda, please fetch the Tweets
-$tweets = $yolanda->fetchTweets();
+$tweets = $yatm->fetchTweets();
 // The fallback message
 $fallback = $params->get('fallback');
 // Minimum Tweets
 $mintweets = isset($tweets[$params->get('mintweets', 4)]);
+// Last item flag
+$last = count($tweets) - 1;
 // Show the search term?
 $showterm = $params->get('showterm');
 // Twitter search term
@@ -37,34 +39,11 @@ if ($mintweets) {
 	$doc->addScript('http://platform.twitter.com/widgets.js');
 }
 
-if ($params->get('loadjs') && $mintweets) {
-	if ($params->get('loadjquery')) {
-		$doc->addScript('http://code.jquery.com/jquery.min.js');
-	}
-	$doc->addScript(JURI::base(TRUE) . '/modules/mod_yatm/tmpl/js/jquery.carousel.min.js');
-	$js = '(function ($) {
-		 $().ready(function () {
-			 $("div.yatm").carousel({
-				 dispItems		   :' . htmlspecialchars($params->get('dispItems')) . ',
-				 loop			   :' . ($params->get('loop') ? 'true' : 'false') . ',
-				 autoSlide		   :' . ($params->get('autoSlide') ? 'true' : 'false') . ',
-				 autoSlideInterval :' . htmlspecialchars($params->get('autoSlideInterval')) . ',
-				 btnsPosition	   :"' . $params->get('btnsPosition') . '",
-				 nextBtn		   : \'<a class="next" title="Next">Next</a>\',
-				 prevBtn		   : \'<a class="prev" title="Previous">Previous</a>\'
-			 });
-		 });
-	 })(jQuery)';
-	// Nicefy JS
-	$js = preg_replace(array('/\s{2,}+/', '/\t/', '/\n/'), '', $js);
-	$doc->addScriptDeclaration($js);
-}
-
 // Load CSS
 if ($params->get('loadcss')) {
 	// Check for template override of CSS
-	if (file_exists(JPATH_SITE . '/templates/' . $app->getTemplate() . '/css/mod_yatm/yatm.css')) {
-		$doc->addStyleSheet(JURI::base(TRUE) . '/templates/' . $app->getTemplate() . '/css/mod_yatm/yatm.css');
+	if (file_exists(JPATH_SITE . '/templates/' . $app->getTemplate() . '/css/yatm.css')) {
+		$doc->addStyleSheet(JURI::base(TRUE) . '/templates/' . $app->getTemplate() . '/css/yatm.css');
 	} else {
 		$doc->addStyleSheet(JURI::base(TRUE) . '/modules/mod_yatm/tmpl/css/yatm.css');
 		$css = '.yatm {
@@ -78,4 +57,16 @@ if ($params->get('loadcss')) {
 		$css = preg_replace(array('/\s{2,}+/', '/\t/', '/\n/'), '', $css);
 		$doc->addStyleDeclaration($css);
 	}
+}
+
+if (file_exists(JPATH_SITE . '/templates/' . $app->getTemplate() . '/css/looper.css')) {
+	$doc->addStyleSheet(JURI::base(TRUE) . '/templates/' . $app->getTemplate() . '/css/looper.css');
+} elseif (file_exists(JPATH_SITE . '/media/looper/css/looper.css')) {
+	$doc->addStyleSheet(JURI::base(TRUE) . '/media/looper/css/looper.css');
+}
+
+if (file_exists(JPATH_SITE . '/templates/' . $app->getTemplate() . '/js/looper.js')) {
+	$doc->addScript(JURI::base(TRUE) . '/templates/' . $app->getTemplate() . '/js/looper.js');
+} elseif (file_exists(JPATH_SITE . '/media/looper/js/looper.js')) {
+	$doc->addScript(JURI::base(TRUE) . '/media/looper/js/looper.js');
 }

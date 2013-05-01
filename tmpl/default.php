@@ -18,9 +18,14 @@ if (!$mintweets) {
         } ?> href="http://twitter.com/search?q=<?php echo $term ?>">#<?php echo $term ?></a>
     </h3>
     <?php endif ?>
-    <div class="yatm">
-        <ul>
-            <?php foreach ($tweets as $tweet) : ?>
+	<div data-looper="go" id="looper<?php echo $module->id; ?>" data-interval="false" class="looper side slide yatm<?php echo $moduleclass_sfx ?>">
+		<div class="nav">
+			<a data-looper="prev" class="prev" href="#looper<?php echo $module->id; ?>">Previous</a>
+			<a data-looper="next" class="next" href="#looper<?php echo $module->id; ?>">Next</a>
+		</div>
+		<ul class="looper-inner">
+            <?php foreach ($tweets as $i => $tweet) : ?>
+	            <?php echo $yatm->loopStart($i) ?>
             <li class="tweet">
                 <div class="user">
                     <a class="profile-image<?php echo $anchorclass ?>" href="https://twitter.com/<?php echo $tweet['from_user'] ?>">
@@ -54,6 +59,7 @@ if (!$mintweets) {
                     </li>
                 </ul>
             </li>
+	        <?php echo $yatm->loopEnd($i, $last) ?>
             <?php endforeach; ?>
         </ul>
     </div>
