@@ -4,8 +4,7 @@
  * File       mod_yatm.php
  * Created    11/29/12 11:12 PM
  * Author     Matt Thomas matt@betweenbrain.com
- * Copyright  Copyright (C) 2012 betweenbrain llc.
- * License    GNU GPL v3 or later
+ * Copyright  Copyright (C) 2012 The Solomon R. Guggenheim Foundation. All Rights Reserved.
  */
 
 // Get the brains of this opration
