@@ -1,10 +1,10 @@
 <?php defined('_JEXEC') or die;
+
 /**
  * File       default.php
  * Created    11/29/12 11:13 PM
  * Author     Matt Thomas matt@betweenbrain.com
- * Copyright  Copyright (C) 2012 betweenbrain llc.
- * License    GNU GPL v3 or later
+ * Copyright  Copyright (C) 2012 The Solomon R. Guggenheim Foundation. All Rights Reserved.
  */
 
 // Check for minimum Tweets
@@ -18,9 +18,14 @@ if (!$mintweets) {
         } ?> href="http://twitter.com/search?q=<?php echo $term ?>">#<?php echo $term ?></a>
     </h3>
     <?php endif ?>
-    <div class="yatm">
-        <ul>
-            <?php foreach ($tweets as $tweet) : ?>
+	<div data-looper="go" id="looper<?php echo $module->id; ?>" data-interval="false" class="looper side slide yatm<?php echo $moduleclass_sfx ?>">
+		<div class="nav">
+			<a data-looper="prev" class="prev" href="#looper<?php echo $module->id; ?>">Previous</a>
+			<a data-looper="next" class="next" href="#looper<?php echo $module->id; ?>">Next</a>
+		</div>
+		<ul class="looper-inner">
+            <?php foreach ($tweets as $i => $tweet) : ?>
+	            <?php echo $yatm->loopStart($i) ?>
             <li class="tweet">
                 <div class="user">
                     <a class="profile-image<?php echo $anchorclass ?>" href="https://twitter.com/<?php echo $tweet['from_user'] ?>">
@@ -54,6 +59,7 @@ if (!$mintweets) {
                     </li>
                 </ul>
             </li>
+	        <?php echo $yatm->loopEnd($i, $last) ?>
             <?php endforeach; ?>
         </ul>
     </div>
