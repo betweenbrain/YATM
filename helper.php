@@ -4,8 +4,7 @@
  * File       helper.php
  * Created    11/29/12 11:13 PM
  * Author     Matt Thomas matt@betweenbrain.com
- * Copyright  Copyright (C) 2012 betweenbrain llc.
- * License    GNU GPL v3 or later
+ * Copyright  Copyright (C) 2012 The Solomon R. Guggenheim Foundation. All Rights Reserved.
  */
 
 class modYatmHelper {
@@ -76,10 +75,14 @@ class modYatmHelper {
 	 */
 	function searchTwitter() {
 		// Get parameters from the module's configuration
-		$term        = htmlspecialchars($this->params->get('term'));
-		$type        = $this->params->get('type');
-		$rpp         = htmlspecialchars($this->params->get('rpp'));
-		$cachemaxage = $this->params->get('cachemaxage', 15) * 60;
+		$term              = htmlspecialchars($this->params->get('term'));
+		$type              = $this->params->get('type');
+		$rpp               = htmlspecialchars($this->params->get('rpp'));
+		$cachemaxage       = $this->params->get('cachemaxage', 15) * 60;
+		$consumerKey       = htmlspecialchars($this->params->get('consumerKey'));
+		$consumerSecret    = htmlspecialchars($this->params->get('consumerSecret'));
+		$accessToken       = htmlspecialchars($this->params->get('accessToken'));
+		$accessTokenSecret = htmlspecialchars($this->params->get('accessTokenSecret'));
 
 		// Build the search URL
 		$url = 'http://search.twitter.com/search.json?q=';
@@ -347,6 +350,26 @@ class modYatmHelper {
 		}
 
 		return FALSE;
+	}
+
+	function loopStart($i) {
+		$ipl = $this->params->get('itemsPerLoop');
+
+		if (fmod($i, $ipl) == 0) {
+			return '<div class="item">';
+		}
+
+		return NULL;
+	}
+
+	function loopEnd($i, $last) {
+		$ipl = $this->params->get('itemsPerLoop');
+
+		if ((fmod($i, $ipl) == $ipl - 1) || ($i == $last)) {
+			return '</div>';
+		}
+
+		return NULL;
 	}
 }
 

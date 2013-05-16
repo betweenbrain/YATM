@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <install type="module" version="2.5" method="upgrade">
 	<name>YATM</name>
-	<creationDate>March 1, 2013</creationDate>
+	<creationDate>May 16, 2013</creationDate>
 	<author>Matt Thomas</author>
 	<authorUrl>http://betweenbrain.com</authorUrl>
-	<copyright>Copyright (C) 2009 - 2012 Matt Thomas. All rights reserved.</copyright>
-	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-	<version>1.5.4</version>
+	<copyright>Copyright (C) 2012 The Solomon R. Guggenheim Foundation. All rights reserved.</copyright>
+	<version>1.5.5</version>
 	<description>Yet Another Twitter Module!</description>
 	<files>
 		<filename>mod_yatm.xml</filename>
@@ -49,6 +48,11 @@
 		       label="Maximum Results"
 		       description="Maximum number of Tweets to display.."
 		       size="15"/>
+		<param name="itemsPerLoop"
+		       type="text"
+		       default="4"
+		       label="Items Per Loop"
+		       description="The number of items to display in a single loop or slide"/>
 		<param name="type"
 		       type="list"
 		       default="mixed"
@@ -174,7 +178,7 @@
 		       default="CSS parameters"/>
 		<param name="loadcss"
 		       type="list"
-		       default="1"
+		       default="0"
 		       label="Load CSS"
 		       description="If yes, loads basic stylesheet and the following settings. No allows you to custom define everything in your template.">
 			<option value="0">No</option>
