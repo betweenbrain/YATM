@@ -60,12 +60,12 @@ if ($params->get('loadcss')) {
 
 if (file_exists(JPATH_SITE . '/templates/' . $app->getTemplate() . '/css/looper.css')) {
 	$doc->addStyleSheet(JURI::base(TRUE) . '/templates/' . $app->getTemplate() . '/css/looper.css');
-} elseif (file_exists(JPATH_SITE . '/media/looper/css/looper.css')) {
-	$doc->addStyleSheet(JURI::base(TRUE) . '/media/looper/css/looper.css');
+} elseif (file_exists(JPATH_SITE . '/media/css/looper.css')) {
+	$doc->addStyleSheet(JURI::base(TRUE) . '/media/css/looper.css');
 }
 
 if (file_exists(JPATH_SITE . '/templates/' . $app->getTemplate() . '/js/looper.js')) {
 	$doc->addScript(JURI::base(TRUE) . '/templates/' . $app->getTemplate() . '/js/looper.js');
-} elseif (file_exists(JPATH_SITE . '/media/looper/js/looper.js')) {
-	$doc->addScript(JURI::base(TRUE) . '/media/looper/js/looper.js');
+} elseif (file_exists(JPATH_SITE . '//media/js/looper.js')) {
+	$doc->addScript(JURI::base(TRUE) . '//media/js/looper.js');
 }
