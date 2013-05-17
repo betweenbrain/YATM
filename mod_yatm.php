@@ -66,6 +66,6 @@ if (file_exists(JPATH_SITE . '/templates/' . $app->getTemplate() . '/css/looper.
 
 if (file_exists(JPATH_SITE . '/templates/' . $app->getTemplate() . '/js/looper.js')) {
 	$doc->addScript(JURI::base(TRUE) . '/templates/' . $app->getTemplate() . '/js/looper.js');
-} elseif (file_exists(JPATH_SITE . '//media/js/looper.js')) {
-	$doc->addScript(JURI::base(TRUE) . '//media/js/looper.js');
+} elseif (file_exists(JPATH_SITE . '/media/js/looper.js')) {
+	$doc->addScript(JURI::base(TRUE) . '/media/js/looper.js');
 }
