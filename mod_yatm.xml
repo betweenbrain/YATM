@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <install type="module" version="2.5" method="upgrade">
 	<name>YATM</name>
-	<creationDate>May 16, 2013</creationDate>
+	<creationDate>May 17, 2013</creationDate>
 	<author>Matt Thomas</author>
 	<authorUrl>http://betweenbrain.com</authorUrl>
 	<copyright>Copyright (C) 2012 The Solomon R. Guggenheim Foundation. All rights reserved.</copyright>
-	<version>1.5.5</version>
+	<version>1.5.6</version>
 	<description>Yet Another Twitter Module!</description>
 	<files>
 		<filename>mod_yatm.xml</filename>
